@@ -1,4 +1,4 @@
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div class="title" fxLayout="row wrap" fxLayoutAlign="center center">
   <div fxFlex fxFlexAlign="stretch">
     <h2>
       All Users
@@ -13,21 +13,25 @@
 </div>
 <mat-divider></mat-divider>
 
-<mat-card fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center"
-          fxLayoutGap="10px" *ngFor="let user of (users$ | async)">
+<mat-card fxLayout="row"
+          fxLayout.xs="column"
+          fxLayoutAlign="center center"
+          fxLayoutGap="10px"
+          *ngFor="let user of (users$ | async)">
   <strong fxFlex>{{user.displayName}}</strong>
-  <div fxFlex>{{user.email}}</div>
-  <div fxLayout="row">
-    <mat-chip-list>
+  <div fxFlex dir="rtl">{{user.email}}</div>
+  <div class="role-chip">
+    <mat-chip-list dir="rtl">
       <mat-chip>{{user.role}}</mat-chip>
     </mat-chip-list>
   </div>
 
-  <div fxLayout="row">
-    <button mat-icon-button (click)="editUser(user)">
+  <div fxLayout="row"
+       fxLayoutGap="10px">
+    <button mat-mini-fab color="primary" (click)="editUser(user)">
       <mat-icon>create</mat-icon>
     </button>
-    <button mat-icon-button (click)="deleteUser(user)">
+    <button mat-mini-fab color="primary" (click)="deleteUser(user)">
       <mat-icon>delete_sweep</mat-icon>
     </button>
   </div>

@@ -39,7 +39,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProfileSettingsComponent } from './components/profile/profile-settings.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
-import { MatDivider, MatDividerModule } from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [

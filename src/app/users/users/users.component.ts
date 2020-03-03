@@ -37,6 +37,7 @@ export class UsersComponent implements OnInit {
   openUserDialog(user?: User) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
+    dialogConfig.width = '400px';
     dialogConfig.data = user || {};
 
     this.dialog.open(UserDialogComponent, dialogConfig)

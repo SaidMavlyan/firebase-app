@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { LoaderService } from '../../services/loader.service';
 
 @Component({
@@ -9,12 +9,12 @@ import { LoaderService } from '../../services/loader.service';
 })
 export class ProgressBarComponent implements OnInit {
 
-  isLoading$: Observable<boolean>;
+  isLoading$: Subject<boolean>;
 
   constructor(private loaderService: LoaderService) {
   }
 
   ngOnInit(): void {
-    this.isLoading$ = this.loaderService.loaderState$;
+    this.isLoading$ = this.loaderService.loaderSubject;
   }
 }
