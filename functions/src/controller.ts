@@ -36,18 +36,12 @@ export async function get(req: Request, res: Response) {
 export async function patch(req: Request, res: Response) {
   try {
     const {id} = req.params;
-    // const {displayName, password, email, role} = req.body;
     const {displayName, email, role} = req.body;
 
-    // Todo: cleanup
-    // if (!id || !displayName || !password || !email || !role) {
-    //   return res.status(400).send({message: 'Missing fields'});
-    // }
-    if (!id || !displayName || !email) {
+    if (!id || !displayName || !email || !role) {
       return res.status(400).send({message: 'Missing fields'});
     }
 
-    // await admin.auth().updateUser(id, {displayName, password, email});
     await admin.auth().updateUser(id, {displayName, email});
     await admin.auth().setCustomUserClaims(id, {role});
     const user = await admin.auth().getUser(id);

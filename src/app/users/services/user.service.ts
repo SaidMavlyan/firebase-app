@@ -44,9 +44,8 @@ export class UserService {
 
   create(user: CreateUserRequest) {
     this.loaderService.show();
-    return this.http.post(`${this.baseUrl}`, user).pipe(
-      map(() => {
-      }),
+    return this.http.post<{ user: User }>(`${this.baseUrl}`, user).pipe(
+      map(result => result.user),
       finalize(() => this.loaderService.hide())
     );
   }

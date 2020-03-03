@@ -1,22 +1,23 @@
-<div fxLayout="row">
-  <div fxFlex>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <div fxFlex fxFlexAlign="stretch">
     <h2>
       All Users
     </h2>
   </div>
 
-  <div fxLayout="row" fxFlexAlign="end">
+  <div dir="rtl" fxFlex fxFlexAlign="center">
     <button mat-flat-button color="accent" (click)="create()">
       New User
     </button>
   </div>
 </div>
+<mat-divider></mat-divider>
 
 <mat-card fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center"
           fxLayoutGap="10px" *ngFor="let user of (users$ | async)">
-  <strong fxFlex fxFlexAlign="center center">{{user.displayName}}</strong>
-  <div fxFlex fxFlexAlign="center">{{user.email}}</div>
-  <div fxFlex fxFlexAlign="center">
+  <strong fxFlex>{{user.displayName}}</strong>
+  <div fxFlex>{{user.email}}</div>
+  <div fxLayout="row">
     <mat-chip-list>
       <mat-chip>{{user.role}}</mat-chip>
     </mat-chip-list>

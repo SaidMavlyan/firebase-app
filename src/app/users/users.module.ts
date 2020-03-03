@@ -17,6 +17,7 @@ import { UserDialogComponent } from './user-form/user-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatIconModule,
     MatChipsModule,
     MatDialogModule,
+    MatDividerModule,
     MatInputModule,
     MatSelectModule,
   ]

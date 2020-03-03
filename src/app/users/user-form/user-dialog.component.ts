@@ -13,25 +13,35 @@ export class UserDialogComponent implements OnInit {
 
   form: FormGroup;
   user: User;
+  isEditing = false;
 
   constructor(private fb: FormBuilder,
               private dialogRef: MatDialogRef<UserDialogComponent>,
               private userService: UserService,
               @Inject(MAT_DIALOG_DATA) user: User) {
+    if (user.uid) {
+      this.isEditing = true;
+    }
     this.user = user;
-
-    // todo: proper validation values
-    this.form = fb.group({
-      displayName: [user.displayName, Validators.required],
-      email: [user.email, Validators.required],
-      role: [user.role, Validators.required]
+    this.form = this.fb.group({
+      displayName: [this.user.displayName || '', Validators.required],
+      email: [this.user.email || '', Validators.required],
+      password: ['', Validators.required],
+      role: [this.user.role || 'user', Validators.required]
     });
   }
 
   ngOnInit() {
   }
 
-  save() {
+  create() {
+    this.userService.create({...this.form.value})
+        .subscribe((v) => {
+          this.dialogRef.close(this.form.value);
+        });
+  }
+
+  update() {
     this.userService.edit({uid: this.user.uid, ...this.form.value})
         .subscribe((v) => {
           this.dialogRef.close(this.form.value);
@@ -41,4 +51,5 @@ export class UserDialogComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
+
 }

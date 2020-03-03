@@ -1,16 +1,27 @@
-<h2 mat-dialog-title>Edit User</h2>
+<h2 mat-dialog-title>{{isEditing ? "Edit User" : "Add User"}}</h2>
 <mat-dialog-content [formGroup]="form">
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <input matInput
            placeholder="Name"
            formControlName="displayName">
   </mat-form-field>
+
   <mat-form-field>
     <input matInput
            placeholder="Email"
            formControlName="email">
   </mat-form-field>
-  <mat-form-field appearance="fill">
+
+  <ng-container *ngIf="!isEditing">
+    <mat-form-field>
+      <input matInput
+             type="password"
+             placeholder="Password"
+             formControlName="password">
+    </mat-form-field>
+  </ng-container>
+
+  <mat-form-field>
     <mat-label>Select</mat-label>
     <mat-select formControlName="role" required>
       <mat-option *ngFor="let role of ['user', 'manager', 'admin']" [value]="role">
@@ -18,16 +29,14 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button class="mat-raised-button"
-          (click)="close()">
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center">
+  <button class="mat-raised-button" (click)="close()">
     Close
   </button>
-  <button class="mat-raised-button mat-primary"
-          (click)="save()">
-    Save
+
+  <button class="mat-raised-button mat-primary" (click)="isEditing ? update() : create()">
+    {{isEditing ? "Update" : "Create"}}
   </button>
 </mat-dialog-actions>

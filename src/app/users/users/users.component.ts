@@ -27,13 +27,17 @@ export class UsersComponent implements OnInit {
   }
 
   create() {
+    this.openUserDialog();
   }
 
   editUser(user: User) {
+    this.openUserDialog(user);
+  }
+
+  openUserDialog(user?: User) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = user;
+    dialogConfig.data = user || {};
 
     this.dialog.open(UserDialogComponent, dialogConfig)
         .afterClosed()

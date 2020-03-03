@@ -39,16 +39,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProfileSettingsComponent } from './components/profile/profile-settings.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { MatDivider, MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddEditMealComponent,
     LoginComponent,
+    ProgressBarComponent,
     HeaderComponent,
     MealsComponent,
-    ProfileSettingsComponent,
-    ProgressBarComponent
+    ProfileSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +59,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
     AngularFirestoreModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatDividerModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
