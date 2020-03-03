@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +8,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private db: AngularFirestore) {
+  constructor(private router: Router) {
   }
 
   printError(event) {

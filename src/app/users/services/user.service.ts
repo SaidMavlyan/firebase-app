@@ -33,17 +33,21 @@ export class UserService {
   }
 
   user$(id: string): Observable<User> {
+    this.loaderService.show();
     return this.http.get<{ user: User }>(`${this.baseUrl}/${id}`).pipe(
       map(result => {
         return result.user;
-      })
+      }),
+      finalize(() => this.loaderService.hide())
     );
   }
 
   create(user: CreateUserRequest) {
+    this.loaderService.show();
     return this.http.post(`${this.baseUrl}`, user).pipe(
-      map(_ => {
-      })
+      map(() => {
+      }),
+      finalize(() => this.loaderService.hide())
     );
   }
 

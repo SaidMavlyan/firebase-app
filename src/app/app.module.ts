@@ -36,7 +36,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ProfileComponent } from './components/profile/profile.component';
+import { ProfileSettingsComponent } from './components/profile/profile-settings.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
@@ -47,7 +47,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
     LoginComponent,
     HeaderComponent,
     MealsComponent,
-    ProfileComponent,
+    ProfileSettingsComponent,
     ProgressBarComponent
   ],
   imports: [

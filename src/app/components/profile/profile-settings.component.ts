@@ -7,10 +7,10 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  templateUrl: './profile-settings.component.html',
+  styleUrls: ['./profile-settings.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileSettingsComponent implements OnInit {
 
   user$: Observable<User>;
 

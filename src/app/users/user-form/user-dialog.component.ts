@@ -19,11 +19,12 @@ export class UserDialogComponent implements OnInit {
               private userService: UserService,
               @Inject(MAT_DIALOG_DATA) user: User) {
     this.user = user;
-    console.log('user', user)
 
+    // todo: proper validation values
     this.form = fb.group({
       displayName: [user.displayName, Validators.required],
-      email: [user.email, Validators.required]
+      email: [user.email, Validators.required],
+      role: [user.role, Validators.required]
     });
   }
 

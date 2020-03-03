@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as admin from 'firebase-admin';
+import { Roles } from './roles';
 
 export async function create(req: Request, res: Response) {
   try {
@@ -78,8 +79,8 @@ export async function all(req: Request, res: Response) {
 }
 
 function mapUser(user: admin.auth.UserRecord) {
-  const customClaims = (user.customClaims || {role: ''}) as { role?: string };
-  const role = customClaims.role ? customClaims.role : '';
+  const customClaims = (user.customClaims || {role: Roles.user}) as { role?: string };
+  const role = customClaims.role;
   return {
     uid: user.uid,
     email: user.email || '',

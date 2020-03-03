@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-export function isAuthorized(opts: { hasRole: Array<'admin' | 'manager' | 'user'>, allowSameUser?: boolean }) {
+export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boolean }) {
   return (req: Request, res: Response, next: Function) => {
     // todo: check roles from database
     const {role, email, uid} = res.locals;

@@ -16,6 +16,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { UserDialogComponent } from './user-form/user-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatInputModule } from '@angular/material/input';
     MatChipsModule,
     MatDialogModule,
     MatInputModule,
+    MatSelectModule,
   ]
 })
 export class UsersModule { }

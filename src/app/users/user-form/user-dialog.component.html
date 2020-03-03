@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>title placeholder</h2>
+<h2 mat-dialog-title>Edit User</h2>
 <mat-dialog-content [formGroup]="form">
   <mat-form-field appearance="fill">
     <input matInput
@@ -9,6 +9,14 @@
     <input matInput
            placeholder="Email"
            formControlName="email">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Select</mat-label>
+    <mat-select formControlName="role" required>
+      <mat-option *ngFor="let role of ['user', 'manager', 'admin']" [value]="role">
+        {{role}}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
 </mat-dialog-content>

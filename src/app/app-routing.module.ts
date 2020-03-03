@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MealsComponent } from './components/meals/meals.component';
-import { ProfileComponent } from './components/profile/profile.component';
+import { ProfileSettingsComponent } from './components/profile/profile-settings.component';
 
 const routes: Routes = [
   {
@@ -11,8 +11,8 @@ const routes: Routes = [
     component: HeaderComponent,
     children: [
       {
-        path: 'profile',
-        component: ProfileComponent
+        path: 'settings',
+        component: ProfileSettingsComponent
       },
       {
         path: 'meals',

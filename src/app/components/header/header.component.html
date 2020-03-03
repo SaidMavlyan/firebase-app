@@ -16,8 +16,8 @@
     </button>
 
     <ng-container *ngIf="isLoggedIn$ | async">
-      <button mat-menu-item routerLink="/profile">
-        <span>Profile</span>
+      <button mat-menu-item routerLink="/settings">
+        <span>Settings</span>
       </button>
       <button mat-menu-item (click)="logout()">
         <span>Logout</span>
