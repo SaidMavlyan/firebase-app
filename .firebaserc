@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "calman-777": {
+      "hosting": {
+        "caloman": [
+          "calman-777"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "calman-777"
+  }
+}

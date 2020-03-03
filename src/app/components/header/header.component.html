@@ -1,0 +1,34 @@
+<mat-toolbar color="primary">
+  <mat-icon class="header-icon" aria-hidden="false">fastfood</mat-icon>
+  <button mat-button routerLink="/meals"> Meals</button>
+  <button mat-button *ngIf="isLoggedIn$ | async" routerLink="/users">
+    Users
+  </button>
+
+  <span class="header-spacer"></span>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item *ngIf="!(isLoggedIn$ | async)" routerLink="/login">
+      <span>Login</span>
+    </button>
+
+    <ng-container *ngIf="isLoggedIn$ | async">
+      <button mat-menu-item routerLink="/profile">
+        <span>Profile</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <span>Logout</span>
+      </button>
+    </ng-container>
+  </mat-menu>
+
+</mat-toolbar>
+
+<app-progress-bar></app-progress-bar>
+
+<div fxLayout="column" fxLayoutAlign="space-around center">
+  <router-outlet></router-outlet>
+</div>
