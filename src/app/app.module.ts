@@ -40,6 +40,7 @@ import { ProfileSettingsComponent } from './components/profile/profile-settings.
 import { MatChipsModule } from '@angular/material/chips';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSelectModule,
     MatSidenavModule,
     MatSortModule,
+    MatSnackBarModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,

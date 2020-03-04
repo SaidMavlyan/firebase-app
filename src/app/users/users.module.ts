@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserDeleteDialogComponent } from './user-delete-dialog/user-delete-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { UserDeleteDialogComponent } from './user-delete-dialog/user-delete-dial
     MatDividerModule,
     MatInputModule,
     MatSelectModule,
+    MatSnackBarModule
   ]
 })
 export class UsersModule { }
