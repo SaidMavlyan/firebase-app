@@ -1,10 +1,11 @@
 import { UserService } from '../services/user.service';
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserDialogComponent } from '../user-form/user-dialog.component';
+import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -13,7 +14,8 @@ import { UserDialogComponent } from '../user-form/user-dialog.component';
 })
 export class UsersComponent implements OnInit {
 
-  users$: Observable<User[]>;
+  users$: Subject<User[]>;
+  dialogConfig = new MatDialogConfig();
 
   constructor(
     private dialog: MatDialog,
@@ -23,7 +25,9 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.users$ = this.userService.users$;
+    this.users$ = this.userService.usersSubject$;
+    this.userService.loadUsers();
+    this.dialogConfig.width = '400px';
   }
 
   create() {
@@ -35,21 +39,27 @@ export class UsersComponent implements OnInit {
   }
 
   openUserDialog(user?: User) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '400px';
-    dialogConfig.data = user || {};
+    this.dialogConfig.autoFocus = true;
+    this.dialogConfig.data = user || {};
 
-    this.dialog.open(UserDialogComponent, dialogConfig)
+    this.dialog.open(UserDialogComponent, this.dialogConfig)
         .afterClosed()
         .subscribe((val) => {
           if (val) {
-            this.userService.users$.subscribe(v => this.users$ = of(v));
+            this.userService.loadUsers();
           }
         });
   }
 
   deleteUser(user: User) {
+    this.dialogConfig.data = user;
 
+    this.dialog.open(UserDeleteDialogComponent, this.dialogConfig)
+        .afterClosed()
+        .subscribe((val) => {
+          if (val) {
+            this.userService.loadUsers();
+          }
+        });
   }
 }

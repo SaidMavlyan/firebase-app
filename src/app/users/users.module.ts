@@ -18,14 +18,17 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { UserDeleteDialogComponent } from './user-delete-dialog/user-delete-dialog.component';
 
 @NgModule({
   declarations: [
     UsersComponent,
-    UserDialogComponent
+    UserDialogComponent,
+    UserDeleteDialogComponent
   ],
   entryComponents: [
-    UserDialogComponent
+    UserDialogComponent,
+    UserDeleteDialogComponent
   ],
   imports: [
     CommonModule,
