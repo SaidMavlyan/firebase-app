@@ -1,6 +1,6 @@
 import { UserService } from '../services/user.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -12,10 +12,11 @@ import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dia
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
 
-  users$: Subject<User[]>;
+  users: User[];
   dialogConfig = new MatDialogConfig();
+  subscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -25,9 +26,19 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.users$ = this.userService.usersSubject$;
+    this.subscription = this.userService.usersSubject$.subscribe(userList => {
+      this.users = userList.sort(this.comparatorForUsers);
+    });
+
     this.userService.loadUsers();
     this.dialogConfig.width = '400px';
+  }
+
+  comparatorForUsers(a: User, b: User) {
+    if (a.role.localeCompare(b.role) === 0) {
+      return a.displayName.localeCompare(b.displayName);
+    }
+    return a.role.localeCompare(b.role);
   }
 
   create() {
@@ -61,5 +72,9 @@ export class UsersComponent implements OnInit {
             this.userService.loadUsers();
           }
         });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

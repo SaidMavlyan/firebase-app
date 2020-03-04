@@ -17,7 +17,7 @@
           fxLayout.xs="column"
           fxLayoutAlign="center center"
           fxLayoutGap="10px"
-          *ngFor="let user of (users$ | async)">
+          *ngFor="let user of users">
   <strong fxFlex>{{user.displayName}}</strong>
   <div fxFlex dir="rtl">{{user.email}}</div>
   <div class="role-chip">
