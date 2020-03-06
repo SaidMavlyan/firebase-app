@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HeaderComponent } from './components/header/header.component';
-import { MealsComponent } from './components/meals/meals.component';
 import { ProfileSettingsComponent } from './components/profile/profile-settings.component';
 import {
   AngularFireAuthGuard,
@@ -32,7 +31,7 @@ const routes: Routes = [
       },
       {
         path: 'meals',
-        component: MealsComponent,
+        loadChildren: () => import('./meals/meals.module').then(m => m.MealsModule),
         canActivate: [AngularFireAuthGuard], data: {authGuardPipe: redirectUnauthorizedToLogin}
       },
       {

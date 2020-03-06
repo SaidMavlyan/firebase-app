@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { UserDialogComponent } from '../user-form/user-dialog.component';
+import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dialog.component';
 
 @Component({
@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     return a.role.localeCompare(b.role);
   }
 
-  create() {
+  createUser() {
     this.openUserDialog();
   }
 

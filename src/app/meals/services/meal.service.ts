@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
-export class MealInfoService {
+export class MealService {
 
   constructor(private db: AngularFirestore) {
   }

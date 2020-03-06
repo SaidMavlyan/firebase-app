@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{isEditing ? "Edit Meal" : "Add Meal"}}</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field>
+    <input matInput
+           placeholder="Description"
+           required
+           formControlName="description">
+    <mat-error *ngIf="form.controls.description.invalid">{{getValidationMessage('description')}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="Calories"
+           required
+           formControlName="calories">
+    <mat-error *ngIf="form.controls.calories.invalid">{{getValidationMessage('calories')}}</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center">
+  <button class="mat-raised-button" (click)="close()">
+    Close
+  </button>
+
+  <button class="mat-raised-button mat-primary" [disabled]="form.invalid" (click)="isEditing ? update() : create()">
+    {{isEditing ? "Update" : "Create"}}
+  </button>
+</mat-dialog-actions>
