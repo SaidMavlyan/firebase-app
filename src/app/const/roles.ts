@@ -3,3 +3,8 @@ export const Roles = {
   manager: 'manager',
   user: 'user'
 };
+
+export const UserManagerRoles = [
+  Roles.admin,
+  Roles.manager
+];

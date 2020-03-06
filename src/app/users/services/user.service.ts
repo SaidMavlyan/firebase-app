@@ -90,7 +90,7 @@ export class UserService {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
-      const msg = `Backend returned ${error.status}: ${error.error.message}`;
+      const msg = `Backend returned ${error.status}: ${error.error?.message || error.statusText}`;
       this.notifierService.error(msg);
     }
     return throwError('Server error; please try again later.');

@@ -23,6 +23,6 @@ export class HeaderComponent implements OnInit {
 
   async logout() {
     await this.afAuth.auth.signOut();
-    await this.router.navigateByUrl('/meals');
+    await this.router.navigateByUrl('/');
   }
 }

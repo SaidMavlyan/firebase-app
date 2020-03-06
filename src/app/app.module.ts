@@ -41,6 +41,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BrowserModule,
     AppRoutingModule,
     AngularFireAuthModule,
+    AngularFireAuthGuardModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     BrowserAnimationsModule,

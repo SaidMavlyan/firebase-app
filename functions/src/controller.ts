@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as admin from 'firebase-admin';
-import { Roles } from './roles';
+import { Roles } from '../../src/app/const/roles';
 
 export async function create(req: Request, res: Response) {
   try {
