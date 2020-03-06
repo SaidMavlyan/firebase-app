@@ -1,17 +1,8 @@
-<div class="title" fxLayout="row wrap" fxLayoutAlign="center center">
-  <div fxFlex fxFlexAlign="stretch">
-    <h2>
-      All Users
-    </h2>
-  </div>
+<app-page-title title="All Users"></app-page-title>
 
-  <div dir="rtl" fxFlex fxFlexAlign="center">
-    <button mat-flat-button color="accent" (click)="create()">
-      New User
-    </button>
-  </div>
-</div>
-<mat-divider></mat-divider>
+<button mat-flat-button color="accent" (click)="create()">
+  New User
+</button>
 
 <mat-card fxLayout="row"
           fxLayout.xs="column"
