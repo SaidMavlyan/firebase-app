@@ -4,4 +4,27 @@
   </button>
 </app-page-title>
 
+<mat-card fxLayout="row"
+          fxLayout.xs="column"
+          fxLayoutAlign="center center"
+          fxLayoutGap="10px"
+          *ngFor="let meal of (meals$ | async) as Meal">
+  <strong fxFlex>{{meal.description}}</strong>
+  <div class="calories-chip">
+    <mat-chip-list dir="rtl">
+      <mat-chip color="accent" selected>{{meal.calories}}</mat-chip>
+      <span>:</span>
+      <span>Calories</span>
+    </mat-chip-list>
+  </div>
 
+  <div fxLayout="row"
+       fxLayoutGap="10px">
+    <button mat-mini-fab color="primary" (click)="editMeal(meal)">
+      <mat-icon>create</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" (click)="deleteMeal(meal)">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+  </div>
+</mat-card>

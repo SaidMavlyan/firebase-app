@@ -1,9 +1,41 @@
 rules_version = '2';
 service cloud.firestore {
+  function isAdmin() {
+    return false;
+  }
+
+  function isAuthenticated() {
+    return request.auth.uid != null;
+  }
+
+  function createBySelf() {
+    return request.auth.uid == request.resource.data.userId;
+  }
+
+  function readBySelf() {
+    return request.auth.uid == resource.data.userId;
+  }
+
+  function updateBySelf() {
+    return request.auth.uid == resource.data.userId && resource.data.userId == request.resource.data.userId;
+  }
+
+  function deleteBySelf() {
+    return request.auth.uid == resource.data.userId;
+  }
+
   match /databases/{database}/documents {
 
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2020, 3, 30);
+      allow read, write: if isAdmin();
+    }
+
+    match /meals/{mealId} {
+      // todo: add admin role to the rules
+      allow create: if createBySelf();
+      allow read: if readBySelf();
+      allow update: if updateBySelf();
+      allow delete: if deleteBySelf();
     }
   }
 }

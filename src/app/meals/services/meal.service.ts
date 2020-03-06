@@ -1,16 +1,57 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Meal } from '../models/meal';
+import { map } from 'rxjs/operators';
+import { LoaderService } from '../../services/loader.service';
+import { convertSnaps } from '../../services/utils';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MealService {
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore,
+              private loaderService: LoaderService,
+              private errorHandler: ErrorHandlerService) {
   }
 
-  addMeal(changes: any): Observable<any> {
-    return from(this.db.collection('/meal-info').add(changes));
+  loadUserMeals(userId: string): Observable<Meal[]> {
+    // todo: load only owned entries
+    return this.db.collection('meals',
+      ref => ref.where('userId', '==', userId))
+               .snapshotChanges()
+               .pipe(map(snaps => convertSnaps<Meal>(snaps)));
+  }
+
+  create(meal: Meal): Promise<boolean | Observable<never>> {
+    this.loaderService.show();
+    return this.db.collection('/meals').add(meal)
+               .then(() => {
+                 return true;
+               })
+               .catch(this.errorHandler.onHttpError)
+               .finally(() => {
+                 this.loaderService.hide();
+               });
+  }
+
+  update(mealId: string, meal: Partial<Meal>): Promise<void | Observable<never>> {
+    this.loaderService.show();
+    return this.db.doc(`/meals/${mealId}`).update(meal)
+               .catch(this.errorHandler.onHttpError)
+               .finally(() => {
+                 this.loaderService.hide();
+               });
+  }
+
+  delete(meal: Meal): Promise<void | Observable<never>> {
+    this.loaderService.show();
+    return this.db.doc(`/meals/${meal.id}`).delete()
+               .catch(this.errorHandler.onHttpError)
+               .finally(() => {
+                 this.loaderService.hide();
+               });
   }
 }

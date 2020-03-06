@@ -4,15 +4,18 @@ import { MealsComponent } from './meals/meals.component';
 import { SharedModule } from '../shared/shared.module';
 import { MealDialogComponent } from './meal-dialog/meal-dialog.component';
 import { MealsRoutingModule } from './meals-routing.module';
+import { MealDeleteDialogComponent } from './meal-delete-dialog/meal-delete-dialog.component';
 
 
 @NgModule({
   declarations: [
     MealsComponent,
-    MealDialogComponent
+    MealDialogComponent,
+    MealDeleteDialogComponent
   ],
   entryComponents: [
-    MealDialogComponent
+    MealDialogComponent,
+    MealDeleteDialogComponent
   ],
   imports: [
     CommonModule,

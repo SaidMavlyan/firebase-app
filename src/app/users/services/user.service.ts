@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { LoaderService } from '../../services/loader.service';
 import { environment } from '../../../environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NotifierService } from '../../services/notifier.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 export interface CreateUserRequest {
   displayName: string;
@@ -24,7 +23,7 @@ export class UserService {
   usersSubject$ = new Subject<User[]>();
 
   constructor(private http: HttpClient,
-              private notifierService: NotifierService,
+              private errorHandler: ErrorHandlerService,
               private loaderService: LoaderService) {
   }
 
@@ -34,9 +33,8 @@ export class UserService {
         .then(
           result => {
             this.usersSubject$.next(result.users);
-            this.loaderService.hide();
           })
-        .catch(this.handleError)
+        .catch(this.errorHandler.onHttpError)
         .finally(() => this.loaderService.hide());
   }
 
@@ -44,7 +42,7 @@ export class UserService {
     this.loaderService.show();
     return this.http.get<{ users: User[] }>(`${this.baseUrl}`).pipe(
       map(result => result.users),
-      catchError(this.handleError),
+      catchError(this.errorHandler.onHttpError),
       finalize(() => this.loaderService.hide())
     );
   }
@@ -55,7 +53,7 @@ export class UserService {
       map(result => {
         return result.user;
       }),
-      catchError(this.handleError),
+      catchError(this.errorHandler.onHttpError),
       finalize(() => this.loaderService.hide())
     );
   }
@@ -64,7 +62,7 @@ export class UserService {
     this.loaderService.show();
     return this.http.post<{ user: User }>(`${this.baseUrl}`, user).pipe(
       map(result => result.user),
-      catchError(this.handleError),
+      catchError(this.errorHandler.onHttpError),
       finalize(() => this.loaderService.hide())
     );
   }
@@ -73,7 +71,7 @@ export class UserService {
     this.loaderService.show();
     return this.http.patch<{ user: User }>(`${this.baseUrl}/${user.uid}`, user).pipe(
       map(result => result.user),
-      catchError(this.handleError),
+      catchError(this.errorHandler.onHttpError),
       finalize(() => this.loaderService.hide())
     );
   }
@@ -81,18 +79,9 @@ export class UserService {
   delete(user: User) {
     this.loaderService.show();
     return this.http.delete(`${this.baseUrl}/${user.uid}`).pipe(
-      catchError(this.handleError),
+      catchError(this.errorHandler.onHttpError),
       finalize(() => this.loaderService.hide())
     );
   }
 
-  handleError = (error: HttpErrorResponse) => {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-    } else {
-      const msg = `Backend returned ${error.status}: ${error.error?.message || error.statusText}`;
-      this.notifierService.error(msg);
-    }
-    return throwError('Server error; please try again later.');
-  }
 }

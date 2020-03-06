@@ -42,16 +42,17 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   createUser() {
+    this.dialogConfig.data = {};
     this.openUserDialog();
   }
 
   editUser(user: User) {
-    this.openUserDialog(user);
+    this.dialogConfig.data = user;
+    this.openUserDialog();
   }
 
-  openUserDialog(user?: User) {
+  openUserDialog() {
     this.dialogConfig.autoFocus = true;
-    this.dialogConfig.data = user || {};
 
     this.dialog.open(UserDialogComponent, this.dialogConfig)
         .afterClosed()

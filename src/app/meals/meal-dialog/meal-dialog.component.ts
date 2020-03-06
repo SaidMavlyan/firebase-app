@@ -29,6 +29,7 @@ export class MealDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
+      userId: [this.meal.userId],
       description: [this.meal.description || '', [Validators.required, Validators.maxLength(TEXT_MAX_LEN)]],
       calories: [this.meal.calories || undefined, [Validators.required, Validators.pattern(/^[1-9]\d{0,10}$/)]],
     });
@@ -51,19 +52,17 @@ export class MealDialogComponent implements OnInit {
   }
 
   create() {
-    console.log('create', this.form.value);
-    // this.userService.create({...this.form.value})
-    //     .subscribe((v) => {
-    //       this.dialogRef.close(this.form.value);
-    //     });
+    this.mealService.create({...this.form.value})
+        .then((state) => {
+          this.close();
+        });
   }
 
   update() {
-    console.log('update', this.form.value);
-    // this.userService.edit({uid: this.user.uid, ...this.form.value})
-    //     .subscribe((v) => {
-    //       this.dialogRef.close(this.form.value);
-    //     });
+    this.mealService.update(this.meal.id, {...this.form.value})
+        .then((state) => {
+          this.close();
+        });
   }
 
   close() {

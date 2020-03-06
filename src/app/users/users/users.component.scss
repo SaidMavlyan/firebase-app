@@ -3,17 +3,8 @@ mat-card {
   min-width: 30vw;
 }
 
-h2 {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.title {
-  min-width: 30vw;
-}
-
 .role-chip {
-  min-width: 90px;
+  min-width: 100px;
   @media (max-width: 600px) {
     min-width: 0px;
   }
