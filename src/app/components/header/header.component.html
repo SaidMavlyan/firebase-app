@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
   <mat-icon class="header-icon" aria-hidden="false">fastfood</mat-icon>
-  <button mat-button routerLink="/meals"> Meals</button>
-  <button mat-button *ngIf="isLoggedIn$ | async" routerLink="/users">
-    Users
-  </button>
+  <ng-container *ngIf="isLoggedIn">
+    <button mat-button routerLink="/meals"> Meals</button>
+    <button mat-button *ngIf="isUserManager" routerLink="/users"> Users</button>
+  </ng-container>
 
   <span class="header-spacer"></span>
 
@@ -11,11 +11,11 @@
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item *ngIf="!(isLoggedIn$ | async)" routerLink="/login">
+    <button mat-menu-item *ngIf="!isLoggedIn" routerLink="/login">
       <span>Login</span>
     </button>
 
-    <ng-container *ngIf="isLoggedIn$ | async">
+    <ng-container *ngIf="isLoggedIn">
       <button mat-menu-item routerLink="/settings">
         <span>Settings</span>
       </button>
