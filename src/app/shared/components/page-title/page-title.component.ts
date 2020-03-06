@@ -14,5 +14,4 @@ export class PageTitleComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
