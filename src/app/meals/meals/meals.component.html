@@ -3,30 +3,38 @@
     Add
   </button>
 </app-page-title>
+<mat-accordion [multi]="true">
+  <ng-container *ngFor="let meals of mealsByDate">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> {{meals[0].date | date}} </mat-panel-title>
+        <mat-panel-description>
+          100 / 200 cal
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-card fxLayout="row"
+                fxLayout.xs="column"
+                fxLayoutAlign="center center"
+                fxLayoutGap="10px"
+                *ngFor="let meal of meals">
+        <span>{{meal.time}}</span>
+        <strong fxFlex>{{meal.description}}</strong>
+        <div class="calories-chip">
+          <mat-chip-list>
+            <mat-chip color="accent" selected>{{meal.calories}} cal</mat-chip>
+          </mat-chip-list>
+        </div>
 
-<mat-card fxLayout="row"
-          fxLayout.xs="column"
-          fxLayoutAlign="center center"
-          fxLayoutGap="10px"
-          *ngFor="let meal of (meals$ | async) as Meal">
-  <span>{{meal.date | date}}</span>
-  <span>{{meal.time}}</span>
-  <strong fxFlex>{{meal.description}}</strong>
-  <div class="calories-chip">
-    <mat-chip-list dir="rtl">
-      <mat-chip color="accent" selected>{{meal.calories}}</mat-chip>
-      <span>:</span>
-      <span>Calories</span>
-    </mat-chip-list>
-  </div>
-
-  <div fxLayout="row"
-       fxLayoutGap="10px">
-    <button mat-mini-fab color="primary" (click)="editMeal(meal)">
-      <mat-icon>create</mat-icon>
-    </button>
-    <button mat-mini-fab color="primary" (click)="deleteMeal(meal)">
-      <mat-icon>delete_sweep</mat-icon>
-    </button>
-  </div>
-</mat-card>
+        <div fxLayout="row"
+             fxLayoutGap="10px">
+          <button mat-mini-fab color="primary" (click)="editMeal(meal)">
+            <mat-icon>create</mat-icon>
+          </button>
+          <button mat-mini-fab color="primary" (click)="deleteMeal(meal)">
+            <mat-icon>delete_sweep</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+    </mat-expansion-panel>
+  </ng-container>
+</mat-accordion>
