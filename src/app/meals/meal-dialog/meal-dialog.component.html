@@ -15,6 +15,18 @@
            formControlName="calories">
     <mat-error *ngIf="form.controls.calories.invalid">{{getValidationMessage('calories')}}</mat-error>
   </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="datePicker" placeholder="Date" required formControlName="date">
+    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [ngxTimepicker]="endTime" [format]="24" placeholder="Time"
+           formControlName="time" required/>
+  </mat-form-field>
+  <ngx-material-timepicker #endTime></ngx-material-timepicker>
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center">

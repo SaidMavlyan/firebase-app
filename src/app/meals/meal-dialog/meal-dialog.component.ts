@@ -3,13 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MealService } from '../services/meal.service';
 import { Meal } from '../models/meal';
+import * as moment from 'moment';
 
 const TEXT_MAX_LEN = 500;
+const SORTABLE_DATE = 'YYYY-MM-DD';
 
 @Component({
   selector: 'app-add-edit-meal',
   templateUrl: './meal-dialog.component.html',
-  styleUrls: ['./meal-dialog.component.scss']
+  styleUrls: ['./meal-dialog.component.scss'],
 })
 export class MealDialogComponent implements OnInit {
 
@@ -30,6 +32,8 @@ export class MealDialogComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       userId: [this.meal.userId],
+      date: [this.meal.date ? moment(this.meal.date, SORTABLE_DATE) : moment()],
+      time: [this.meal.time || moment().format('HH:mm')],
       description: [this.meal.description || '', [Validators.required, Validators.maxLength(TEXT_MAX_LEN)]],
       calories: [this.meal.calories || undefined, [Validators.required, Validators.pattern(/^[1-9]\d{0,10}$/)]],
     });
@@ -52,20 +56,20 @@ export class MealDialogComponent implements OnInit {
   }
 
   create() {
-    this.mealService.create({...this.form.value})
-        .then((state) => {
-          this.close();
-        });
+    this.mealService.create(this.prepareForm(this.form.value))
+        .then(() => this.close());
   }
 
   update() {
-    this.mealService.update(this.meal.id, {...this.form.value})
-        .then((state) => {
-          this.close();
-        });
+    this.mealService.update(this.meal.id, this.prepareForm(this.form.value))
+        .then(() => this.close());
   }
 
   close() {
     this.dialogRef.close();
+  }
+
+  prepareForm(form: any) {
+    return {...form, date: form.date.format(SORTABLE_DATE)};
   }
 }

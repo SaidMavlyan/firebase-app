@@ -18,18 +18,16 @@ export class MealService {
   }
 
   loadUserMeals(userId: string): Observable<Meal[]> {
-    // todo: load only owned entries
     return this.db.collection('meals',
       ref => ref.where('userId', '==', userId))
                .snapshotChanges()
                .pipe(map(snaps => convertSnaps<Meal>(snaps)));
   }
 
-  create(meal: Meal): Promise<boolean | Observable<never>> {
+  create(meal: Meal): Promise<void | Observable<never>> {
     this.loaderService.show();
     return this.db.collection('/meals').add(meal)
                .then(() => {
-                 return true;
                })
                .catch(this.errorHandler.onHttpError)
                .finally(() => {

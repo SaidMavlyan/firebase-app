@@ -7,7 +7,6 @@ import { Meal } from '../models/meal';
 import { Observable } from 'rxjs';
 import { MealDeleteDialogComponent } from '../meal-delete-dialog/meal-delete-dialog.component';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserManagerRoles } from '../../const/roles';
 
 @Component({
   selector: 'app-meals',

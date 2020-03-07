@@ -9,6 +9,8 @@
           fxLayoutAlign="center center"
           fxLayoutGap="10px"
           *ngFor="let meal of (meals$ | async) as Meal">
+  <span>{{meal.date | date}}</span>
+  <span>{{meal.time}}</span>
   <strong fxFlex>{{meal.description}}</strong>
   <div class="calories-chip">
     <mat-chip-list dir="rtl">

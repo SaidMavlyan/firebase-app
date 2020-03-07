@@ -24,10 +24,26 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+  },
+};
 
 @NgModule({
-  declarations: [PageTitleComponent],
+  declarations: [
+    PageTitleComponent,
+  ],
   imports: [
+    MomentDateModule,
     CommonModule,
     FlexLayoutModule,
     FlexModule,
@@ -35,7 +51,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
-    MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
     MatIconModule,
@@ -52,9 +67,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     ReactiveFormsModule,
+    NgxMaterialTimepickerModule
   ],
   exports: [
+    MomentDateModule,
     PageTitleComponent,
     FlexLayoutModule,
     FlexModule,
@@ -62,6 +81,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
+    MatNativeDateModule,
     MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
@@ -80,6 +100,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTabsModule,
     MatToolbarModule,
     ReactiveFormsModule,
+    NgxMaterialTimepickerModule,
+  ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}
