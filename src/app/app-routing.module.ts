@@ -12,6 +12,7 @@ import {
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserManagerRoles } from './const/roles';
+import { HomeComponent } from './components/home/home.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectLoggedInToMeals = () => redirectLoggedInTo(['meals']);
@@ -24,6 +25,10 @@ const routes: Routes = [
     path: '',
     component: HeaderComponent,
     children: [
+      {
+        path: '',
+        component: HomeComponent
+      },
       {
         path: 'settings',
         component: ProfileSettingsComponent,

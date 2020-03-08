@@ -1,0 +1,10 @@
+<app-page-title title="Calories manager">
+  <button mat-raised-button color="primary" *ngIf="!isLoggedIn" routerLink="/login">
+    Login
+  </button>
+
+  <ng-container *ngIf="isLoggedIn">
+    <button mat-raised-button color="primary" routerLink="/meals"> Meals</button>
+  </ng-container>
+</app-page-title>
+

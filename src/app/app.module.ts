@@ -19,6 +19,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { SharedModule } from './shared/shared.module';
 import { MealsModule } from './meals/meals.module';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { MealsModule } from './meals/meals.module';
     ProgressBarComponent,
     HeaderComponent,
     ProfileSettingsComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
