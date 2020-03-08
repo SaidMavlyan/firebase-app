@@ -5,13 +5,15 @@ import { SharedModule } from '../shared/shared.module';
 import { MealDialogComponent } from './meal-dialog/meal-dialog.component';
 import { MealsRoutingModule } from './meals-routing.module';
 import { MealDeleteDialogComponent } from './meal-delete-dialog/meal-delete-dialog.component';
+import { MealsDailyListComponent } from './meals-daily-list/meals-daily-list.component';
 
 
 @NgModule({
   declarations: [
     MealsComponent,
     MealDialogComponent,
-    MealDeleteDialogComponent
+    MealDeleteDialogComponent,
+    MealsDailyListComponent
   ],
   entryComponents: [
     MealDialogComponent,

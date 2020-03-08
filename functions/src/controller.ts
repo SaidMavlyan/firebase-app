@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import * as admin from 'firebase-admin';
-import { Roles } from '../../src/app/const/roles';
+import { Roles } from './roles';
 
 export async function create(req: Request, res: Response) {
   try {
-    const {displayName, password, email, role} = req.body;
+    const {displayName, password, email, role, dailyCalories} = req.body;
 
     if (!displayName || !password || !email || !role) {
       return res.status(400).send({message: 'Missing fields'});
@@ -15,7 +15,7 @@ export async function create(req: Request, res: Response) {
       password,
       email
     });
-    await admin.auth().setCustomUserClaims(uid, {role});
+    await admin.auth().setCustomUserClaims(uid, {role, dailyCalories});
 
     return res.status(201).send({uid});
   } catch (err) {
@@ -36,14 +36,14 @@ export async function get(req: Request, res: Response) {
 export async function patch(req: Request, res: Response) {
   try {
     const {id} = req.params;
-    const {displayName, email, role} = req.body;
+    const {displayName, email, role, dailyCalories} = req.body;
 
     if (!id || !displayName || !email || !role) {
       return res.status(400).send({message: 'Missing fields'});
     }
 
     await admin.auth().updateUser(id, {displayName, email});
-    await admin.auth().setCustomUserClaims(id, {role});
+    await admin.auth().setCustomUserClaims(id, {role, dailyCalories});
     const user = await admin.auth().getUser(id);
 
     return res.status(200).send({user: mapUser(user)});
@@ -73,13 +73,20 @@ export async function all(req: Request, res: Response) {
 }
 
 function mapUser(user: admin.auth.UserRecord) {
-  const customClaims = (user.customClaims || {role: Roles.user}) as { role?: string };
+  const customClaims = (user.customClaims || {
+    role: Roles.user,
+    dailyCalories: undefined
+  }) as { role?: string, dailyCalories?: number };
+
   const role = customClaims.role;
+  const dailyCalories = customClaims.dailyCalories;
+
   return {
     uid: user.uid,
     email: user.email || '',
     displayName: user.displayName || '',
     role,
+    dailyCalories,
     lastSignInTime: user.metadata.lastSignInTime,
     creationTime: user.metadata.creationTime
   }

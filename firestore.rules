@@ -9,25 +9,33 @@ service cloud.firestore {
   }
 
   function createBySelf() {
-    return request.auth.uid == request.resource.data.userId;
+    return request.auth.uid == request.resource.data.uid;
   }
 
   function readBySelf() {
-    return request.auth.uid == resource.data.userId;
+    return request.auth.uid == resource.data.uid;
   }
 
   function updateBySelf() {
-    return request.auth.uid == resource.data.userId && resource.data.userId == request.resource.data.userId;
+    return request.auth.uid == resource.data.uid && resource.data.uid == request.resource.data.uid;
   }
 
   function deleteBySelf() {
-    return request.auth.uid == resource.data.userId;
+    return request.auth.uid == resource.data.uid;
   }
 
   match /databases/{database}/documents {
 
     match /{document=**} {
       allow read, write: if isAdmin();
+    }
+
+    match /users/{uid} {
+      // todo: add admin role to the rules
+      allow create: if createBySelf();
+      allow read: if readBySelf();
+      allow update: if updateBySelf();
+      allow delete: if deleteBySelf();
     }
 
     match /meals/{mealId} {

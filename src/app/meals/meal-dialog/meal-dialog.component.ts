@@ -31,7 +31,7 @@ export class MealDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      userId: [this.meal.userId],
+      uid: [this.meal.uid],
       date: [this.meal.date ? moment(this.meal.date, SORTABLE_DATE) : moment()],
       time: [this.meal.time || moment().format('HH:mm')],
       description: [this.meal.description || '', [Validators.required, Validators.maxLength(TEXT_MAX_LEN)]],

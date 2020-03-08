@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.afAuth.user.subscribe((user) => {
       this.isLoggedIn = !!user;
-      user.getIdTokenResult().then(token => {
+      user?.getIdTokenResult().then(token => {
         this.isUserManager = UserManagerRoles.includes(token.claims.role);
       });
     });

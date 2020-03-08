@@ -2,14 +2,27 @@
 
 <div *ngIf="user$ | async; let user">
   <mat-card>
-    <mat-card-header>
+    <mat-card-header fxLayout="row">
       <mat-card-title>{{user.displayName}}</mat-card-title>
+      <mat-chip-list>
+        <mat-chip>
+          {{user.role?.toUpperCase()}}
+        </mat-chip>
+      </mat-chip-list>
     </mat-card-header>
-    <mat-card-content>
-      <small>{{user.email}}</small>
-      <span>{{user.role?.toUpperCase()}}</span>
+    <mat-card-content fxLayout="row"
+                      fxLayout.xs="column"
+                      fxLayoutAlign="center center"
+                      fxLayoutGap="10px">
+      <span>{{user.email}}</span>
+      Daily calories limit:
+      <mat-chip-list>
+        <mat-chip color="primary" selected>
+          {{user.dailyCalories}}
+        </mat-chip>
+      </mat-chip-list>
     </mat-card-content>
-    <mat-card-actions>
+    <mat-card-actions dir="rtl">
       <button mat-button color="primary" (click)="edit(user)">
         Edit Profile
       </button>

@@ -32,7 +32,8 @@ export class UserDialogComponent implements OnInit {
     this.form = this.fb.group({
       displayName: [this.user.displayName || '', [Validators.required, Validators.maxLength(NAME_MAX_LEN)]],
       email: [this.user.email || '', [Validators.required, Validators.email]],
-      role: [this.user.role || 'user', Validators.required]
+      role: [this.user.role || 'user', Validators.required],
+      dailyCalories: [this.user.dailyCalories || undefined, Validators.pattern(/^[1-9]\d{0,10}$/)]
     });
 
     if (!this.isEditing) {
@@ -56,6 +57,8 @@ export class UserDialogComponent implements OnInit {
       case 'password':
         return this.form.controls.password.hasError('minlength') ?
           `Password should be at least ${PASS_MIN_LEN} characters` : '';
+      case 'calories':
+        return this.form.controls.dailyCalories.hasError('pattern') ? 'Not a valid number' : '';
       default:
         return 'Please enter correct value';
     }

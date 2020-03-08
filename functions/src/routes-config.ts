@@ -2,7 +2,7 @@ import { Application } from "express";
 import { all, create, get, patch, remove } from "./controller";
 import { isAuthenticated } from './authenticated';
 import { isAuthorized } from './authorized';
-import { UserManagerRoles } from '../../src/app/const/roles';
+import { UserManagerRoles } from './roles';
 
 export function routesConfig(app: Application) {
 

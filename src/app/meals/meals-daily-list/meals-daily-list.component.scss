@@ -1,0 +1,9 @@
+mat-card {
+  margin: 10px 0;
+}
+mat-expansion-panel {
+  background-color: rgba(143, 215, 161, 0.1);
+  &.limit {
+    background-color: rgba(235, 133, 136, 0.67);
+  }
+}

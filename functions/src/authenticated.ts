@@ -18,7 +18,13 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
 
   try {
     const decodedToken: admin.auth.DecodedIdToken = await admin.auth().verifyIdToken(token);
-    res.locals = {...res.locals, uid: decodedToken.uid, role: decodedToken.role, email: decodedToken.email};
+    res.locals = {
+      ...res.locals,
+      uid: decodedToken.uid,
+      role: decodedToken.role,
+      dailyCalories: decodedToken.dailyCalories,
+      email: decodedToken.email
+    };
     return next();
   } catch (err) {
     console.error(`${err.code} -  ${err.message}`);

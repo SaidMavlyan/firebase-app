@@ -12,7 +12,7 @@ export class LoginComponent {
   }
 
   printError(event) {
-    console.error(event);
+    console.error('>>>>', event);
   }
 
   async onLoginSuccess() {

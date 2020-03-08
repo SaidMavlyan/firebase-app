@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MealDialogComponent } from '../meal-dialog/meal-dialog.component';
 import { MealService } from '../services/meal.service';
 import { Meal } from '../models/meal';
-import { MealDeleteDialogComponent } from '../meal-delete-dialog/meal-delete-dialog.component';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
@@ -12,61 +11,47 @@ import { AngularFireAuth } from '@angular/fire/auth';
   templateUrl: './meals.component.html',
   styleUrls: ['./meals.component.scss']
 })
-export class MealsComponent implements OnInit {
+export class MealsComponent {
 
   dialogConfig = new MatDialogConfig();
-  mealsByDate: Array<Meal[]>;
+  mealsByDate: Array<Meal[]> = [];
   currentUserId: string;
+  dailyLimitCalories: number;
 
   constructor(private db: AngularFirestore,
               private dialog: MatDialog,
               private afAuth: AngularFireAuth,
               private mealService: MealService) {
     this.afAuth.user.subscribe((user) => {
-      this.currentUserId = user.uid;
+      if (user) {
+        this.currentUserId = user.uid;
 
-      this.mealService.loadUserMeals(this.currentUserId).subscribe(meals => {
-        this.mealsByDate = [[]];
-        const sorted = meals.sort(this.comparatorForMeal);
-        sorted.forEach((meal, i) => {
-          if (this.mealsByDate[0].length > 0 && this.mealsByDate[0][0].date !== meal.date) {
-            this.mealsByDate.unshift([]);
-          }
-
-          this.mealsByDate[0].push(meal);
+        user.getIdTokenResult().then(token => {
+          this.dailyLimitCalories = token.claims.dailyCalories;
         });
-      });
+
+        this.mealService.loadUserMeals(this.currentUserId).subscribe(meals => {
+
+          const temp = {};
+          meals.forEach((meal) => {
+            if (!temp[meal.date]) {
+              temp[meal.date] = [];
+            }
+            temp[meal.date].push(meal);
+          });
+
+          const tempArr = Object.values(temp) as Meal[][];
+          this.mealsByDate = tempArr.sort((a, b) => a[0].date.localeCompare(b[0].date));
+
+        });
+      }
     });
   }
 
-  comparatorForMeal(a: Meal, b: Meal) {
-    if (a.date.localeCompare(b.date) === 0) {
-      return b.time.localeCompare(a.time);
-    }
-    return a.date.localeCompare(b.date);
-  }
-
-  ngOnInit(): void {
+  createMeal() {
     this.dialogConfig.width = '400px';
     this.dialogConfig.autoFocus = true;
-  }
-
-  createMeal() {
-    this.dialogConfig.data = {userId: this.currentUserId};
-    this.openMealDialog();
-  }
-
-  editMeal(meal: Meal) {
-    this.dialogConfig.data = meal;
-    this.openMealDialog();
-  }
-
-  openMealDialog() {
+    this.dialogConfig.data = {uid: this.currentUserId};
     this.dialog.open(MealDialogComponent, this.dialogConfig);
-  }
-
-  deleteMeal(meal: Meal) {
-    this.dialogConfig.data = meal;
-    this.dialog.open(MealDeleteDialogComponent, this.dialogConfig);
   }
 }
