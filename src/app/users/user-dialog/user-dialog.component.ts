@@ -2,7 +2,8 @@ import { UserService } from '../services/user.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { User } from '../models/user';
+import { Role, User } from '../models/user';
+import { UserManagerRoles } from '../../const/roles';
 
 const PASS_MIN_LEN = 8;
 const NAME_MAX_LEN = 50;
@@ -17,15 +18,22 @@ export class UserDialogComponent implements OnInit {
   form: FormGroup;
   user: User;
   isEditing = false;
+  isRoleEditor = false;
 
   constructor(private fb: FormBuilder,
               private dialogRef: MatDialogRef<UserDialogComponent>,
               private userService: UserService,
               @Inject(MAT_DIALOG_DATA) user: User) {
+    this.user = user;
+
     if (user.uid) {
       this.isEditing = true;
     }
-    this.user = user;
+
+    this.userService.currentUser$.subscribe(currentUser => {
+      this.isRoleEditor = UserManagerRoles.includes(currentUser.role);
+    });
+
   }
 
   ngOnInit() {

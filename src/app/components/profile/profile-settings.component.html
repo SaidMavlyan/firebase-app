@@ -1,12 +1,12 @@
 <app-page-title title="Settings"></app-page-title>
 
-<div *ngIf="user$ | async; let user">
+<div *ngIf="currentUser">
   <mat-card>
     <mat-card-header fxLayout="row">
-      <mat-card-title>{{user.displayName}}</mat-card-title>
+      <mat-card-title>{{currentUser.displayName}}</mat-card-title>
       <mat-chip-list>
         <mat-chip>
-          {{user.role?.toUpperCase()}}
+          {{currentUser.role?.toUpperCase()}}
         </mat-chip>
       </mat-chip-list>
     </mat-card-header>
@@ -14,16 +14,16 @@
                       fxLayout.xs="column"
                       fxLayoutAlign="center center"
                       fxLayoutGap="10px">
-      <span>{{user.email}}</span>
+      <span>{{currentUser.email}}</span>
       Daily calories limit:
       <mat-chip-list>
         <mat-chip color="primary" selected>
-          {{user.dailyCalories}}
+          {{currentUser.dailyCalories}}
         </mat-chip>
       </mat-chip-list>
     </mat-card-content>
     <mat-card-actions dir="rtl">
-      <button mat-button color="primary" (click)="edit(user)">
+      <button mat-button color="primary" (click)="edit(currentUser)">
         Edit Profile
       </button>
     </mat-card-actions>

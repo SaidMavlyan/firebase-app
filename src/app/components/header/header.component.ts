@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UserManagerRoles } from '../../const/roles';
 import { Subscription } from 'rxjs';
+import { UserService } from '../../users/services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -16,15 +17,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(private afAuth: AngularFireAuth,
+              private userService: UserService,
               private router: Router) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.afAuth.user.subscribe((user) => {
+    this.subscription = this.userService.currentUser$.subscribe((user) => {
       this.isLoggedIn = !!user;
-      user?.getIdTokenResult().then(token => {
-        this.isUserManager = UserManagerRoles.includes(token.claims.role);
-      });
+      this.isUserManager = UserManagerRoles.includes(user?.role);
     });
   }
 
