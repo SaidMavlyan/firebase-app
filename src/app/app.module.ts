@@ -42,10 +42,12 @@ import { HomeComponent } from './components/home/home.component';
     MatPasswordStrengthModule.forRoot(),
     UsersModule,
     MealsModule,
-    NgxAuthFirebaseUIModule.forRoot(environment.firebase),
+    NgxAuthFirebaseUIModule.forRoot(
+      environment.firebase,
+      () => undefined,
+      {toastMessageOnAuthSuccess: false}),
   ],
-  exports: [
-  ],
+  exports: [],
   providers: [
     AuthTokenHttpInterceptorProvider
   ],

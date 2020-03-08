@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { UserManagerRoles } from '../../const/roles';
+import { Roles, UserManagerRoles } from '../../const/roles';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../users/services/user.service';
 
@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isLoggedIn = false;
   isUserManager = false;
+  isAdmin = false;
   subscription: Subscription;
 
   constructor(private afAuth: AngularFireAuth,
@@ -25,6 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscription = this.userService.currentUser$.subscribe((user) => {
       this.isLoggedIn = !!user;
       this.isUserManager = UserManagerRoles.includes(user?.role);
+      this.isAdmin = user?.role === Roles.admin;
     });
   }
 

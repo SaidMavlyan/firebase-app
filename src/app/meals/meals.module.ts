@@ -6,6 +6,7 @@ import { MealDialogComponent } from './meal-dialog/meal-dialog.component';
 import { MealsRoutingModule } from './meals-routing.module';
 import { MealDeleteDialogComponent } from './meal-delete-dialog/meal-delete-dialog.component';
 import { MealsDailyListComponent } from './meals-daily-list/meals-daily-list.component';
+import { AdminMealsComponent } from './admin-meals/admin-meals.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { MealsDailyListComponent } from './meals-daily-list/meals-daily-list.com
     MealsComponent,
     MealDialogComponent,
     MealDeleteDialogComponent,
-    MealsDailyListComponent
+    MealsDailyListComponent,
+    AdminMealsComponent
   ],
   entryComponents: [
     MealDialogComponent,

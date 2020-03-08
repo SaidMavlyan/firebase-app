@@ -1,8 +1,9 @@
 <mat-toolbar color="primary">
   <mat-icon class="header-icon" aria-hidden="false">fastfood</mat-icon>
   <ng-container *ngIf="isLoggedIn">
-    <button mat-button routerLink="/meals"> Meals</button>
-    <button mat-button *ngIf="isUserManager" routerLink="/users"> Users</button>
+    <button mat-button routerLink="/meals">Meals</button>
+    <button mat-button *ngIf="isUserManager" routerLink="/users">Users</button>
+    <button mat-button *ngIf="isAdmin" routerLink="/meals/admin">Dashboard</button>
   </ng-container>
 
   <span class="header-spacer"></span>

@@ -17,6 +17,13 @@ export class MealService {
               private errorHandler: ErrorHandlerService) {
   }
 
+  loadAllMeals(): Observable<Meal[]> {
+    return this.db.collection('meals',
+      ref => ref.orderBy('date', 'asc'))
+               .snapshotChanges()
+               .pipe(map(snaps => convertSnaps<Meal>(snaps)));
+  }
+
   loadUserMeals(uid: string): Observable<Meal[]> {
     return this.db.collection('meals',
       ref => ref.where('uid', '==', uid))

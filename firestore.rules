@@ -1,7 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   function isAdmin() {
-    return false;
+    return isAuthenticated() && request.auth.token.role == 'admin';
   }
 
   function isAuthenticated() {
@@ -39,11 +39,10 @@ service cloud.firestore {
     }
 
     match /meals/{mealId} {
-      // todo: add admin role to the rules
-      allow create: if createBySelf();
-      allow read: if readBySelf();
-      allow update: if updateBySelf();
-      allow delete: if deleteBySelf();
+      allow create: if createBySelf() || isAdmin();
+      allow read: if readBySelf() || isAdmin();
+      allow update: if updateBySelf() || isAdmin;
+      allow delete: if deleteBySelf() || isAdmin;
     }
   }
 }
