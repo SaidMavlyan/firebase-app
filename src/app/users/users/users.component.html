@@ -19,10 +19,14 @@
 
   <div fxLayout="row"
        fxLayoutGap="10px">
-    <button mat-mini-fab color="primary" (click)="editUser(user)">
+    <button mat-mini-fab color="primary"
+            [disabled]="user.role === 'admin' && !isAdmin()"
+            (click)="editUser(user)">
       <mat-icon>create</mat-icon>
     </button>
-    <button mat-mini-fab color="primary" (click)="deleteUser(user)">
+    <button mat-mini-fab color="primary"
+            [disabled]="user.role === 'admin' && !isAdmin()"
+            (click)="deleteUser(user)">
       <mat-icon>delete_sweep</mat-icon>
     </button>
   </div>

@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dialog.component';
+import { Roles } from '../../const/roles';
 
 @Component({
   selector: 'app-users',
@@ -16,19 +17,25 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   users: User[];
   dialogConfig = new MatDialogConfig();
-  subscription: Subscription;
+  subscriptions: Subscription[] = [];
+  currentUser: User;
 
   constructor(
     private dialog: MatDialog,
     private httpClient: HttpClient,
     private userService: UserService,
   ) {
+    this.subscriptions.push(
+      this.userService.currentUser$.subscribe(user => this.currentUser = user)
+    );
   }
 
   ngOnInit() {
-    this.subscription = this.userService.usersSubject$.subscribe(userList => {
-      this.users = userList.sort(this.comparatorForUsers);
-    });
+    this.subscriptions.push(
+      this.userService.usersSubject$.subscribe(userList => {
+        this.users = userList.sort(this.comparatorForUsers);
+      })
+    );
 
     this.userService.loadUsers();
     this.dialogConfig.width = '400px';
@@ -75,7 +82,11 @@ export class UsersComponent implements OnInit, OnDestroy {
         });
   }
 
+  isAdmin() {
+    return this.currentUser.role === Roles.admin;
+  }
+
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(el => el.unsubscribe());
   }
 }
