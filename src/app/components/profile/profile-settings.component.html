@@ -2,7 +2,9 @@
 
 <div *ngIf="currentUser">
   <mat-card>
-    <mat-card-header fxLayout="row">
+    <mat-card-header fxLayout="column"
+                     fxLayoutAlign="center center"
+                     fxLayoutGap="10px">
       <mat-card-title>{{currentUser.displayName}}</mat-card-title>
       <mat-chip-list>
         <mat-chip>
@@ -10,15 +12,14 @@
         </mat-chip>
       </mat-chip-list>
     </mat-card-header>
-    <mat-card-content fxLayout="row"
-                      fxLayout.xs="column"
+    <mat-card-content fxLayout="column"
                       fxLayoutAlign="center center"
                       fxLayoutGap="10px">
       <span>{{currentUser.email}}</span>
       Daily calories limit:
       <mat-chip-list>
         <mat-chip color="primary" selected>
-          {{currentUser.dailyCalories}}
+          {{currentUser.dailyCalories || 'Daily Calories not defined'}}
         </mat-chip>
       </mat-chip-list>
     </mat-card-content>

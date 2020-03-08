@@ -6,6 +6,7 @@ import { MealService } from '../services/meal.service';
 import { Meal } from '../models/meal';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { UserService } from '../../users/services/user.service';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-meals',
@@ -22,12 +23,13 @@ export class MealsComponent {
   constructor(private db: AngularFirestore,
               private dialog: MatDialog,
               private userService: UserService,
+              private loaderService: LoaderService,
               private afAuth: AngularFireAuth,
               private mealService: MealService) {
     this.userService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUserId = user.uid;
-        this.dailyLimitCalories = user.dailyCalories;
+        this.dailyLimitCalories = Number(user.dailyCalories) || 0;
 
         this.mealService.loadUserMeals(this.currentUserId).subscribe(meals => {
 

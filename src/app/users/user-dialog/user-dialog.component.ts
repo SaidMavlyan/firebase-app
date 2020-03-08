@@ -1,9 +1,10 @@
 import { UserService } from '../services/user.service';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Role, User } from '../models/user';
 import { UserManagerRoles } from '../../const/roles';
+import { Subscription } from 'rxjs';
 
 const PASS_MIN_LEN = 8;
 const NAME_MAX_LEN = 50;
@@ -13,12 +14,14 @@ const NAME_MAX_LEN = 50;
   templateUrl: './user-dialog.component.html',
   styleUrls: ['./user-dialog.component.scss']
 })
-export class UserDialogComponent implements OnInit {
+export class UserDialogComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   user: User;
   isEditing = false;
   isRoleEditor = false;
+  subscription: Subscription;
+  roles: Role[] = ['user', 'manager'];
 
   constructor(private fb: FormBuilder,
               private dialogRef: MatDialogRef<UserDialogComponent>,
@@ -30,8 +33,11 @@ export class UserDialogComponent implements OnInit {
       this.isEditing = true;
     }
 
-    this.userService.currentUser$.subscribe(currentUser => {
+    this.subscription = this.userService.currentUser$.subscribe(currentUser => {
       this.isRoleEditor = UserManagerRoles.includes(currentUser.role);
+      if (currentUser.role === 'admin') {
+        this.roles.push('admin');
+      }
     });
 
   }
@@ -41,7 +47,7 @@ export class UserDialogComponent implements OnInit {
       displayName: [this.user.displayName || '', [Validators.required, Validators.maxLength(NAME_MAX_LEN)]],
       email: [this.user.email || '', [Validators.required, Validators.email]],
       role: [this.user.role || 'user', Validators.required],
-      dailyCalories: [this.user.dailyCalories || undefined, Validators.pattern(/^[1-9]\d{0,10}$/)]
+      dailyCalories: [this.user.dailyCalories || 0, Validators.pattern(/^\d{0,10}$/)]
     });
 
     if (!this.isEditing) {
@@ -88,5 +94,9 @@ export class UserDialogComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
