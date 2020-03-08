@@ -21,7 +21,7 @@ export interface CreateUserRequest {
 export class UserService {
 
   private baseUrl = `${environment.baseUrl}/api/users`;
-  usersSubject$ = new Subject<User[]>();
+  usersSubject$ = new BehaviorSubject<User[]>(null);
   currentUser$ = new BehaviorSubject<User>(null);
   currentUserId = null;
 
@@ -92,5 +92,5 @@ export class UserService {
       finalize(() => this.loaderService.hide())
     );
   }
-
 }
+

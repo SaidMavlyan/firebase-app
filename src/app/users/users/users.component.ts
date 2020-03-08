@@ -33,7 +33,9 @@ export class UsersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscriptions.push(
       this.userService.usersSubject$.subscribe(userList => {
-        this.users = userList.sort(this.comparatorForUsers);
+        if (!!userList) {
+          this.users = userList.sort(this.comparatorForUsers);
+        }
       })
     );
 
