@@ -42,7 +42,7 @@ export class MealsComponent {
           });
 
           const tempArr = Object.values(temp) as Meal[][];
-          this.mealsByDate = tempArr.sort((a, b) => a[0].date.localeCompare(b[0].date));
+          this.mealsByDate = tempArr.sort((a, b) => b[0].date.localeCompare(a[0].date));
 
         });
       }

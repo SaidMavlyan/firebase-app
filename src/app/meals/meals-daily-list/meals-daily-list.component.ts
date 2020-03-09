@@ -23,7 +23,7 @@ export class MealsDailyListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.meals.sort((a, b) => a.time.localeCompare(b.time));
+    this.meals.sort((a, b) => b.time.localeCompare(a.time));
     this.totalCalories = this.meals.reduce((total, meal) => total + Number(meal.calories), 0);
     this.dialogConfig.width = '400px';
     this.dialogConfig.autoFocus = true;

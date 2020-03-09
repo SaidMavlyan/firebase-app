@@ -4,6 +4,10 @@ service cloud.firestore {
     return isAuthenticated() && request.auth.token.role == 'admin';
   }
 
+  function isManager() {
+    return isAuthenticated() && request.auth.token.role == 'manager';
+  }
+
   function isAuthenticated() {
     return request.auth.uid != null;
   }
@@ -26,23 +30,22 @@ service cloud.firestore {
 
   match /databases/{database}/documents {
 
-    match /{document=**} {
-      allow read, write: if isAdmin();
-    }
+    // match /{document=**} {
+    //   allow read, write: if isAdmin();
+    // }
 
     match /users/{uid} {
-      // todo: add admin role to the rules
-      allow create: if createBySelf();
-      allow read: if readBySelf();
-      allow update: if updateBySelf();
-      allow delete: if deleteBySelf();
+      allow create: if createBySelf() || isAdmin() || isManager();
+      allow read: if readBySelf() || isAdmin() || isManager();
+      allow update: if updateBySelf() || isAdmin() || isManager();
+      allow delete: if deleteBySelf() || isAdmin() || isManager();
     }
 
     match /meals/{mealId} {
       allow create: if createBySelf() || isAdmin();
       allow read: if readBySelf() || isAdmin();
-      allow update: if updateBySelf() || isAdmin;
-      allow delete: if deleteBySelf() || isAdmin;
+      allow update: if updateBySelf() || isAdmin();
+      allow delete: if deleteBySelf() || isAdmin();
     }
   }
 }
