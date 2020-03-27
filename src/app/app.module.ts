@@ -45,7 +45,10 @@ import { HomeComponent } from './components/home/home.component';
     NgxAuthFirebaseUIModule.forRoot(
       environment.firebase,
       () => undefined,
-      {toastMessageOnAuthSuccess: false}),
+      {
+        toastMessageOnAuthSuccess: false,
+        toastMessageOnAuthError: false
+      }),
   ],
   exports: [],
   providers: [

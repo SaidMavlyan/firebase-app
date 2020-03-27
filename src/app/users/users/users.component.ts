@@ -73,7 +73,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   deleteUser(user: User) {
-    this.dialogConfig.data = user;
+    this.dialogConfig.data = {user};
 
     this.dialog.open(UserDeleteDialogComponent, this.dialogConfig)
         .afterClosed()

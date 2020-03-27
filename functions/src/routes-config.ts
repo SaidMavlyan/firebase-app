@@ -32,7 +32,7 @@ export function routesConfig(app: Application) {
 
   app.delete('/users/:id', [
     isAuthenticated,
-    isAuthorized({hasRole: UserManagerRoles}),
+    isAuthorized({hasRole: UserManagerRoles, allowSameUser: true}),
     remove
   ]);
 }

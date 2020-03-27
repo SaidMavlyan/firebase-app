@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotifierService } from '../../services/notifier.service';
 
 @Component({
   selector: 'app-login',
@@ -8,12 +9,12 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
-  constructor(private router: Router) {
+  constructor(private notifierService: NotifierService,
+              private router: Router) {
   }
 
   printError(event) {
-    // todo: handle error
-    console.error('>>>>', event);
+    this.notifierService.error(event.message);
   }
 
   async onLoginSuccess() {
