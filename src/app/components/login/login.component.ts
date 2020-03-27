@@ -12,6 +12,7 @@ export class LoginComponent {
   }
 
   printError(event) {
+    // todo: handle error
     console.error('>>>>', event);
   }
 

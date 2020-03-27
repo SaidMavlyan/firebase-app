@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Meal } from '../models/meal';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -10,6 +10,8 @@ import { MealDeleteDialogComponent } from '../meal-delete-dialog/meal-delete-dia
 import { MealDialogComponent } from '../meal-dialog/meal-dialog.component';
 import { Subscription } from 'rxjs';
 import { User } from '../../users/models/user';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-admin-meals',
@@ -18,11 +20,12 @@ import { User } from '../../users/models/user';
 })
 export class AdminMealsComponent implements OnInit, OnDestroy {
 
-  sortedMeals: Meal[] = [];
+  dataSource = new MatTableDataSource<Meal>();
   displayedColumns: string[] = ['date', 'time', 'user', 'description', 'calories', 'actions'];
   dialogConfig = new MatDialogConfig();
   subscriptions: Subscription[] = [];
   users: { [key: string]: User } = {};
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private db: AngularFirestore,
               private dialog: MatDialog,
@@ -41,12 +44,13 @@ export class AdminMealsComponent implements OnInit, OnDestroy {
       this.userService.currentUser$.subscribe((user) => {
         if (user) {
           this.mealService.loadAllMeals().subscribe(meals => {
-            this.sortedMeals = meals.sort((a, b) => {
+            this.dataSource.data = meals.sort((a, b) => {
               if (b.date.localeCompare(a.date) === 0) {
                 return b.time.localeCompare(a.time);
               }
               return b.date.localeCompare(a.date);
             });
+            this.dataSource.paginator = this.paginator;
           });
         }
       })

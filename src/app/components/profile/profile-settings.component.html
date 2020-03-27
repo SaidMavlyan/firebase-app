@@ -1,6 +1,6 @@
 <app-page-title title="Settings"></app-page-title>
 
-<div *ngIf="currentUser">
+<div *ngIf="userService.currentUser$ | async as currentUser">
   <mat-card>
     <mat-card-header fxLayout="column"
                      fxLayoutAlign="center center"
@@ -26,6 +26,10 @@
     <mat-card-actions dir="rtl">
       <button mat-button color="primary" (click)="edit(currentUser)">
         Edit Profile
+      </button>
+
+      <button class="mat-raised-button mat-warn" (click)="delete(currentUser)">
+        Delete
       </button>
     </mat-card-actions>
   </mat-card>

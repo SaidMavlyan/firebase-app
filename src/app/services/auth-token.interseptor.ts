@@ -7,11 +7,11 @@ import { switchMap, take } from 'rxjs/operators';
 @Injectable({providedIn: 'root'})
 export class AuthTokenHttpInterceptor implements HttpInterceptor {
 
-  constructor(private auth: AngularFireAuth) {
+  constructor(private afAuth: AngularFireAuth) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return this.auth.idToken.pipe(
+    return this.afAuth.idToken.pipe(
       take(1),
       switchMap(idToken => {
         let clone = req.clone();

@@ -1,7 +1,7 @@
 <app-page-title title="All Meals">
 </app-page-title>
 
-<table mat-table [dataSource]="sortedMeals" class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -47,3 +47,4 @@
 
 </table>
 
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

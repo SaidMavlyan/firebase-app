@@ -3,6 +3,7 @@
     Add
   </button>
 </app-page-title>
+
 <mat-accordion [multi]="true">
   <ng-container *ngFor="let meals of mealsByDate">
     <app-meals-daily-list [meals]="meals" [limit]="dailyLimitCalories"></app-meals-daily-list>

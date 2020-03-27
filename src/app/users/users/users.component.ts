@@ -85,7 +85,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   isAdmin() {
-    return this.currentUser.role === Roles.admin;
+    return this.currentUser?.role === Roles.admin;
   }
 
   ngOnDestroy() {

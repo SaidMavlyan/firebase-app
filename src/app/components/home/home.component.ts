@@ -23,10 +23,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  async logout() {
-    await this.afAuth.auth.signOut();
-  }
-
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
