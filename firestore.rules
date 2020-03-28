@@ -30,10 +30,6 @@ service cloud.firestore {
 
   match /databases/{database}/documents {
 
-    // match /{document=**} {
-    //   allow read, write: if isAdmin();
-    // }
-
     match /users/{uid} {
       allow create: if createBySelf() || isAdmin() || isManager();
       allow read: if readBySelf() || isAdmin() || isManager();

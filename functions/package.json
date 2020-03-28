@@ -7,7 +7,8 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test": "mocha test_all"
   },
   "engines": {
     "node": "8"
@@ -21,8 +22,10 @@
     "firebase-functions": "^3.3.0"
   },
   "devDependencies": {
+    "@firebase/testing": "^0.18.0",
     "@types/cors": "^2.8.6",
     "firebase-functions-test": "^0.1.6",
+    "mocha": "^7.1.1",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"
   },
