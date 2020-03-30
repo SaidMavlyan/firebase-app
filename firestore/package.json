@@ -4,9 +4,9 @@
   "scripts": {
     "deploy": "firebase deploy --only firestore",
     "emulator": "firebase emulators:start --only firestore",
-    "watch": "mocha-typescript-watch",
+    "watch": "mocha-typescript-watch ./tests",
     "pretest": "tsc",
-    "test": "mocha --timeout=10000"
+    "test": "mocha ./tests --timeout=10000"
   },
   "devDependencies": {
     "@firebase/testing": "^0.15.0",

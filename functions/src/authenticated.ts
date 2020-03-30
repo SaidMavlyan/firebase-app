@@ -1,18 +1,21 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 
-export async function isAuthenticated(req: Request, res: Response, next: Function) {
+export async function isAuthenticated(req: Request, res: Response, next: any) {
   const {authorization} = req.headers;
 
-  if (!authorization)
+  if (!authorization) {
     return res.status(401).send({message: 'Unauthorized'});
+  }
 
-  if (!authorization.startsWith('Bearer'))
+  if (!authorization.startsWith('Bearer')) {
     return res.status(401).send({message: 'Unauthorized'});
+  }
 
   const split = authorization.split('Bearer ');
-  if (split.length !== 2)
+  if (split.length !== 2) {
     return res.status(401).send({message: 'Unauthorized'});
+  }
 
   const token = split[1];
 
@@ -22,7 +25,6 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
       ...res.locals,
       uid: decodedToken.uid,
       role: decodedToken.role,
-      dailyCalories: decodedToken.dailyCalories,
       email: decodedToken.email
     };
     return next();

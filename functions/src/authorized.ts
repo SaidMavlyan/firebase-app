@@ -1,23 +1,26 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boolean }) {
-  return (req: Request, res: Response, next: Function) => {
-    // todo: check roles from database
+  return (req: Request, res: Response, next: any) => {
     const {role, email, uid} = res.locals;
     const {id} = req.params;
 
-    if (email === 'said.mavlyan@gmail.com')
+    if (email === 'said.mavlyan@gmail.com') {
       return next();
+    }
 
-    if (opts.allowSameUser && id && uid === id)
+    if (opts.allowSameUser && id && uid === id) {
       return next();
+    }
 
-    if (!role)
+    if (!role) {
       return res.status(403).send();
+    }
 
-    if (opts.hasRole.includes(role))
+    if (opts.hasRole.includes(role)) {
       return next();
+    }
 
     return res.status(403).send();
-  }
+  };
 }

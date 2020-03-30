@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 import { Roles } from './roles';
 
@@ -96,7 +96,7 @@ async function mapUser(user: admin.auth.UserRecord) {
     dailyCalories: userInfo?.dailyCalories,
     lastSignInTime: user.metadata.lastSignInTime,
     creationTime: user.metadata.creationTime
-  }
+  };
 }
 
 function handleError(res: Response, err: any) {

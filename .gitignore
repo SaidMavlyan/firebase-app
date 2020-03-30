@@ -48,6 +48,7 @@ testem.log
 **/firestore-debug.log
 **/firebase-debug.log
 /typings
+firebase-service-key.private.json
 
 # System Files
 .DS_Store
