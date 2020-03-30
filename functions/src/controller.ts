@@ -49,7 +49,9 @@ export async function patch(req: Request, res: Response) {
     }
 
     await admin.auth().updateUser(id, {displayName, email});
-    await admin.auth().setCustomUserClaims(id, {role, dailyCalories});
+    await admin.auth().setCustomUserClaims(id, {role});
+    await admin.firestore().doc(`users/${id}`).set({dailyCalories}, {merge: true});
+
     const user = await admin.auth().getUser(id);
 
     const userInfo = await mapUser(user);

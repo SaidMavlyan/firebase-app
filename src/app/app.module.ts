@@ -46,6 +46,7 @@ import { HomeComponent } from './components/home/home.component';
       environment.firebase,
       () => undefined,
       {
+        enableFirestoreSync: false,
         toastMessageOnAuthSuccess: false,
         toastMessageOnAuthError: false
       }),

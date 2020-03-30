@@ -4,10 +4,6 @@ service cloud.firestore {
     return isAuthenticated() && request.auth.token.role == 'admin';
   }
 
-  function isManager() {
-    return isAuthenticated() && request.auth.token.role == 'manager';
-  }
-
   function isAuthenticated() {
     return request.auth.uid != null;
   }
