@@ -1,4 +1,5 @@
 import * as firebase from '@firebase/testing';
+import { assertFails, assertSucceeds } from '@firebase/testing';
 import * as fs from 'fs';
 import { suite, test } from 'mocha-typescript';
 
@@ -7,7 +8,26 @@ const coverageUrl = `http://localhost:8080/emulator/v1/projects/${projectId}:rul
 
 const rules = fs.readFileSync('firestore.rules', 'utf8');
 
-function appAdmin() {
+const collections = {
+  users: 'users',
+  meals: 'meals'
+};
+
+interface User {
+  uid: string;
+  role: string;
+  randomField: string;
+}
+
+function generateUser(role = 'user', name: string = ''): User {
+  return {
+    uid: name + Math.random().toString(),
+    randomField: Math.random().toString(),
+    role
+  };
+}
+
+function adminDB() {
   return firebase
     .initializeAdminApp({
       projectId
@@ -24,18 +44,10 @@ function authedDB(auth) {
     .firestore();
 }
 
-function authedAsAdmin(): { db: firebase.firestore.Firestore, uid: string } {
-  const uid = 'alice';
+function authToDB(userRole = 'user'): { db: firebase.firestore.Firestore, uid: string } {
+  const {uid, role} = generateUser(userRole);
   return {
-    db: authedDB({uid, role: 'admin'}),
-    uid
-  };
-}
-
-function authedAsManager(): { db: firebase.firestore.Firestore, uid: string } {
-  const uid = 'alice';
-  return {
-    db: authedDB({uid, role: 'manager'}),
+    db: authedDB({uid, role}),
     uid
   };
 }
@@ -53,150 +65,202 @@ after(async () => {
   console.log(`View rule coverage information at ${coverageUrl}\n`);
 });
 
-const assertSucceeds = firebase.assertSucceeds;
-const assertFails = firebase.assertFails;
-const collections = {
-  users: 'users',
-  meals: 'meals'
-};
-
-@suite.only
+@suite
 class UserTestsAsAdmin {
 
   @test
-  async 'should let admin to create user'() {
-    const {db, uid: admin} = authedAsAdmin();
-    await assertSucceeds(db.doc(`${collections.users}/${admin}`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
+  async 'Admin can:'() {
   }
 
   @test
-  async 'should let admin to read users'() {
-    const {db} = authedAsAdmin();
-    await assertSucceeds(db.collection(`${collections.users}`).get());
+  async '* not create a user'() {
+    const {db} = authToDB('admin');
+    const user = generateUser();
+
+    await assertFails(db.collection(collections.users).add(user));
   }
 
   @test
-  async 'should let admin to read individual user'() {
-    const {db} = authedAsAdmin();
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
-    await assertSucceeds(db.doc(`${collections.users}/bob`).get());
+  async '* not read users'() {
+    const {db} = authToDB('admin');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.collection(`${collections.users}`).get());
   }
 
   @test
-  async 'should let admin to update user'() {
-    const {db} = authedAsAdmin();
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
-    await assertSucceeds(db.doc(`${collections.users}/bob`).update({
-      uid: 'bob',
-      role: 'user'
-    }));
+  async '* not read individual user'() {
+    const {db} = authToDB('admin');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).get());
   }
 
   @test
-  async 'should let admin to delete user'() {
-    const {db} = authedAsAdmin();
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
-    await assertSucceeds(db.doc(`${collections.users}/bob`).delete());
-  }
-}
+  async '* not update user'() {
+    const {db} = authToDB('admin');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
 
-@suite.only
-class UserTestsAsManager {
-
-  @test
-  async 'should let manager to create user'() {
-    const {db} = authedAsManager();
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).update({...user, randomField: Math.random().toString()}));
   }
 
   @test
-  async 'should let manager to read users'() {
-    const db = authedDB({uid: 'alice', role: 'manager'});
-    await assertSucceeds(db.collection(`${collections.users}`).get());
-  }
+  async '* not delete user'() {
+    const {db} = authToDB('admin');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
 
-  @test
-  async 'should let manager to read individual user'() {
-    const db = authedDB({uid: 'alice', role: 'manager'});
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
-    await assertSucceeds(db.doc(`${collections.users}/bob`).get());
-  }
-
-  @test
-  async 'should let manager to update user'() {
-    const db = authedDB({uid: 'alice', role: 'manager'});
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
-    await assertSucceeds(db.doc(`${collections.users}/bob`).update({
-      uid: 'bob',
-      role: 'user'
-    }));
-  }
-
-  @test
-  async 'should let manager to delete user'() {
-    const db = authedDB({uid: 'alice', role: 'manager'});
-    await assertSucceeds(db.doc(`${collections.users}/bob`).set({
-      uid: 'bob',
-      role: 'manager'
-    }));
-    await assertSucceeds(db.doc(`${collections.users}/bob`).delete());
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).delete());
   }
 }
 
 @suite
+class UserTestsAsManager {
+  @test
+  async 'Manager can:'() {
+  }
+
+  @test
+  async '* not create a user'() {
+    const {db} = authToDB('manager');
+    const user = generateUser();
+
+    await assertFails(db.collection(collections.users).add(user));
+  }
+
+  @test
+  async '* not read users'() {
+    const {db} = authToDB('manager');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.collection(`${collections.users}`).get());
+  }
+
+  @test
+  async '* not read individual user'() {
+    const {db} = authToDB('manager');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).get());
+  }
+
+  @test
+  async '* not update user'() {
+    const {db} = authToDB('manager');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).update({...user, randomField: Math.random().toString()}));
+  }
+
+  @test
+  async '* not delete user'() {
+    const {db} = authToDB('manager');
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).delete());
+  }
+}
+
+@suite
+class UserTestsAsUser {
+  @test
+  async 'User can:'() {
+  }
+
+  @test
+  async '* not create a user'() {
+    const {db} = authToDB();
+    const user = generateUser();
+
+    await assertFails(db.collection(collections.users).add(user));
+  }
+
+  @test
+  async '* not read users'() {
+    const {db} = authToDB();
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.collection(`${collections.users}`).get());
+  }
+
+  @test
+  async '* not read individual user'() {
+    const {db} = authToDB();
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).get());
+  }
+
+  @test
+  async '* not update user'() {
+    const {db} = authToDB();
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).update({...user, randomField: Math.random().toString()}));
+  }
+
+  @test
+  async '* not delete user'() {
+    const {db} = authToDB();
+    const user = generateUser();
+    const docPath = `${collections.users}/${user.uid}`;
+
+    await assertSucceeds(adminDB().doc(docPath).set(user));
+    await assertFails(db.doc(docPath).delete());
+  }
+}
+
+@suite.skip
 class MealTests {
 
   @test
   async 'should let authorized user to create a meal'() {
-    const db = authedDB({uid: 'alice', email: 'alice@example.com'});
-    const meal = db.collection('meals');
+    const {db, uid} = authToDB();
     await assertSucceeds(
-      meal.add({
+      db.collection(collections.meals).add({
         description: 'some nice description',
-        uid: 'alice'
+        uid
       })
     );
   }
 
   @test
   async 'should not let authorized user to create a meal for other users'() {
-    const db = authedDB({uid: 'alice', email: 'alice@example.com'});
-    const meal = db.collection('meals');
+    const {db, uid} = authToDB();
     await assertFails(
-      meal.add({
+      db.collection(collections.meals).add({
         description: 'some nice description',
-        uid: 'bob'
+        uid: `other-${uid}`
       })
     );
   }
 
   @test
   async 'should let admins create a meal'() {
-    const db = authedDB({uid: 'alice', email: 'alice@example.com', role: 'manager'});
-    const meal = db.collection('meals');
+    const {db} = authToDB('admin');
     await assertSucceeds(
-      meal.add({
+      db.collection(collections.meals).add({
         description: 'some nice description',
         uid: 'bob'
       })

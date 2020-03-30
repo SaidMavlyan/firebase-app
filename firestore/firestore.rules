@@ -13,7 +13,7 @@ service cloud.firestore {
   }
 
   function createBySelf() {
-    return request.auth.uid == request.resource.data.uid;
+    return request.auth.uid == resource.data.uid && resource.data.uid == request.resource.data.uid;
   }
 
   function readBySelf() {
@@ -24,24 +24,22 @@ service cloud.firestore {
     return request.auth.uid == resource.data.uid && resource.data.uid == request.resource.data.uid;
   }
 
-  function deleteBySelf() {
-    return request.auth.uid == resource.data.uid;
+  function deleteBySelf(resourceId) {
+    return request.auth.uid == resource.data.uid && resourceId == resourceId;
   }
 
   match /databases/{database}/documents {
 
     match /users/{uid} {
-      allow create: if createBySelf() || isAdmin() || isManager();
-      allow read: if readBySelf() || isAdmin() || isManager();
-      allow update: if updateBySelf() || isAdmin() || isManager();
-      allow delete: if deleteBySelf() || isAdmin() || isManager();
+      // all modifications to Users collection will be done through admin SDK
+      allow read, write: if false;
     }
 
     match /meals/{mealId} {
       allow create: if createBySelf() || isAdmin();
       allow read: if readBySelf() || isAdmin();
       allow update: if updateBySelf() || isAdmin();
-      allow delete: if deleteBySelf() || isAdmin();
+      allow delete: if deleteBySelf(mealId) || isAdmin();
     }
   }
 }

@@ -15,7 +15,12 @@ export async function create(req: Request, res: Response) {
       password,
       email
     });
-    await admin.auth().setCustomUserClaims(uid, {role, dailyCalories});
+
+    await admin.auth().setCustomUserClaims(uid, {role});
+
+    await admin.firestore().doc(`users/${uid}`).set({
+      dailyCalories
+    });
 
     return res.status(201).send({uid});
   } catch (err) {
@@ -27,7 +32,8 @@ export async function get(req: Request, res: Response) {
   try {
     const {id} = req.params;
     const user = await admin.auth().getUser(id);
-    return res.status(200).send({user: mapUser(user)});
+    const userInfo = await mapUser(user);
+    return res.status(200).send({user: userInfo});
   } catch (err) {
     return handleError(res, err);
   }
@@ -46,7 +52,8 @@ export async function patch(req: Request, res: Response) {
     await admin.auth().setCustomUserClaims(id, {role, dailyCalories});
     const user = await admin.auth().getUser(id);
 
-    return res.status(200).send({user: mapUser(user)});
+    const userInfo = await mapUser(user);
+    return res.status(200).send({user: userInfo});
   } catch (err) {
     return handleError(res, err);
   }
@@ -65,28 +72,26 @@ export async function remove(req: Request, res: Response) {
 export async function all(req: Request, res: Response) {
   try {
     const listUsers = await admin.auth().listUsers();
-    const users = listUsers.users.map(mapUser);
+    const users = await Promise.all(listUsers.users.map(mapUser));
     return res.status(200).send({users});
   } catch (err) {
     return handleError(res, err);
   }
 }
 
-function mapUser(user: admin.auth.UserRecord) {
-  const customClaims = (user.customClaims || {
-    role: Roles.user,
-    dailyCalories: undefined
-  }) as { role?: string, dailyCalories?: number };
+async function mapUser(user: admin.auth.UserRecord) {
 
-  const role = customClaims.role;
-  const dailyCalories = customClaims.dailyCalories;
+  const customClaims = (user.customClaims || {role: Roles.user}) as { role: string };
+
+  const docSnap = await admin.firestore().doc(`users/${user.uid}`).get();
+  const userInfo = docSnap.data() as { dailyCalories?: number };
 
   return {
     uid: user.uid,
     email: user.email || '',
     displayName: user.displayName || '',
-    role,
-    dailyCalories,
+    role: customClaims.role,
+    dailyCalories: userInfo?.dailyCalories,
     lastSignInTime: user.metadata.lastSignInTime,
     creationTime: user.metadata.creationTime
   }
