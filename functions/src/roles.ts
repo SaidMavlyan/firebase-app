@@ -1,3 +1,4 @@
+// todo: get roles from db
 export const Roles = {
   admin: 'admin',
   manager: 'manager',

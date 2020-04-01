@@ -16,6 +16,7 @@ export async function create(req: Request, res: Response) {
       email
     });
 
+    // todo: use triggers
     await admin.auth().setCustomUserClaims(uid, {role});
 
     await admin.firestore().doc(`users/${uid}`).set({
@@ -73,6 +74,7 @@ export async function remove(req: Request, res: Response) {
 
 export async function all(req: Request, res: Response) {
   try {
+    // todo: optimize
     const listUsers = await admin.auth().listUsers();
     const users = await Promise.all(listUsers.users.map(mapUser));
     return res.status(200).send({users});
@@ -93,7 +95,7 @@ async function mapUser(user: admin.auth.UserRecord) {
     email: user.email || '',
     displayName: user.displayName || '',
     role: customClaims.role,
-    dailyCalories: userInfo?.dailyCalories,
+    dailyCalories: userInfo.dailyCalories || undefined,
     lastSignInTime: user.metadata.lastSignInTime,
     creationTime: user.metadata.creationTime
   };

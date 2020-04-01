@@ -13,3 +13,11 @@ app.use(cors({origin: true}));
 routesConfig(app);
 
 export const api = functions.https.onRequest(app);
+
+export const authUserCreated = functions.auth.user().onCreate((user: admin.auth.UserRecord) => {
+  console.log('user created', user);
+});
+
+export const authUserDeleted = functions.auth.user().onDelete((user: admin.auth.UserRecord) => {
+  console.log('user deleted', user);
+});

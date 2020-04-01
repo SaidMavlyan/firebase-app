@@ -2,22 +2,15 @@ import { Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 
 export async function isAuthenticated(req: Request, res: Response, next: any) {
-  const {authorization} = req.headers;
+  let token: string;
 
-  if (!authorization) {
-    return res.status(401).send({message: 'Unauthorized'});
+  try {
+    const {authorization} = req.headers;
+    token = authorization.split('Bearer ')[1];
+  } catch (err) {
+    res.status(401);
+    return res.send({message: `Unauthorized: ${err.message}`});
   }
-
-  if (!authorization.startsWith('Bearer')) {
-    return res.status(401).send({message: 'Unauthorized'});
-  }
-
-  const split = authorization.split('Bearer ');
-  if (split.length !== 2) {
-    return res.status(401).send({message: 'Unauthorized'});
-  }
-
-  const token = split[1];
 
   try {
     const decodedToken: admin.auth.DecodedIdToken = await admin.auth().verifyIdToken(token);
@@ -29,7 +22,7 @@ export async function isAuthenticated(req: Request, res: Response, next: any) {
     };
     return next();
   } catch (err) {
-    console.error(`${err.code} -  ${err.message}`);
-    return res.status(401).send({message: 'Unauthorized'});
+    res.status(401);
+    return res.send({message: `Unauthorized: ${err.message}`});
   }
 }

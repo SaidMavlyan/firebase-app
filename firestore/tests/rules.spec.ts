@@ -35,16 +35,18 @@ function adminDB() {
     .firestore();
 }
 
-function authedDB(auth) {
-  return firebase
-    .initializeTestApp({
-      projectId,
-      auth
-    })
-    .firestore();
-}
 
 function authToDB(userRole = 'user'): { db: firebase.firestore.Firestore, uid: string } {
+
+  function authedDB(auth) {
+    return firebase
+      .initializeTestApp({
+        projectId,
+        auth
+      })
+      .firestore();
+  }
+
   const {uid, role} = generateUser(userRole);
   return {
     db: authedDB({uid, role}),
@@ -65,6 +67,7 @@ after(async () => {
   console.log(`View rule coverage information at ${coverageUrl}\n`);
 });
 
+// todo: pass in a loop
 @suite
 class UserTestsAsAdmin {
 
