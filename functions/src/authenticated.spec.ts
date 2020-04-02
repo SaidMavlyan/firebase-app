@@ -1,9 +1,9 @@
 import 'mocha';
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import * as sinon from 'sinon';
-import { expect } from 'chai';
-import { isAuthenticated } from './authenticated';
-import { idToken } from './config.spec';
+import {expect} from 'chai';
+import {isAuthenticated} from './authenticated';
+import {idToken} from './test-data.spec';
 
 describe('authenticated.ts', function () {
 

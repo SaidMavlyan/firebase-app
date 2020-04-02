@@ -16,6 +16,7 @@ export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boo
         return next();
       }
 
+      // todo: manager can edit managers and users, not admins
       if (role && opts.hasRole.includes(role)) {
         return next();
       }

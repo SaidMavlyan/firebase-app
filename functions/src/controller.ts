@@ -1,13 +1,14 @@
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import * as admin from 'firebase-admin';
-import { Roles } from './roles';
+import {Roles} from './roles';
 
 export async function create(req: Request, res: Response) {
   try {
     const {displayName, password, email, role, dailyCalories} = req.body;
 
     if (!displayName || !password || !email || !role) {
-      return res.status(400).send({message: 'Missing fields'});
+      res.status(400);
+      return res.send({message: 'Missing fields'});
     }
 
     const {uid} = await admin.auth().createUser({
@@ -18,11 +19,14 @@ export async function create(req: Request, res: Response) {
 
     await admin.auth().setCustomUserClaims(uid, {role});
 
-    await admin.firestore().doc(`users/${uid}`).set({
-      dailyCalories
-    });
+    if (dailyCalories) {
+      await admin.firestore().doc(`users/${uid}`).set({
+        dailyCalories
+      });
+    }
 
-    return res.status(201).send({uid});
+    res.status(201);
+    return res.send({uid});
   } catch (err) {
     return handleError(res, err);
   }
@@ -33,7 +37,8 @@ export async function get(req: Request, res: Response) {
     const {id} = req.params;
     const user = await admin.auth().getUser(id);
     const userInfo = await mapUser(user);
-    return res.status(200).send({user: userInfo});
+    res.status(200);
+    return res.send({user: userInfo});
   } catch (err) {
     return handleError(res, err);
   }
@@ -45,17 +50,26 @@ export async function patch(req: Request, res: Response) {
     const {displayName, email, role, dailyCalories} = req.body;
 
     if (!id || !displayName || !email || !role) {
-      return res.status(400).send({message: 'Missing fields'});
+      res.status(400);
+      return res.send({message: 'Missing fields'});
     }
 
     await admin.auth().updateUser(id, {displayName, email});
     await admin.auth().setCustomUserClaims(id, {role});
-    await admin.firestore().doc(`users/${id}`).set({dailyCalories}, {merge: true});
+
+    if (dailyCalories) {
+      await admin.firestore().doc(`users/${id}`).set({
+        dailyCalories
+      }, {merge: true});
+    }
 
     const user = await admin.auth().getUser(id);
 
     const userInfo = await mapUser(user);
-    return res.status(200).send({user: userInfo});
+
+    res.status(200);
+    return res.send({user: userInfo});
+
   } catch (err) {
     return handleError(res, err);
   }
@@ -65,7 +79,8 @@ export async function remove(req: Request, res: Response) {
   try {
     const {id} = req.params;
     await admin.auth().deleteUser(id);
-    return res.status(204).send({});
+    res.status(204);
+    return res.send({});
   } catch (err) {
     return handleError(res, err);
   }
@@ -76,7 +91,8 @@ export async function all(req: Request, res: Response) {
     // todo: optimize
     const listUsers = await admin.auth().listUsers();
     const users = await Promise.all(listUsers.users.map(mapUser));
-    return res.status(200).send({users});
+    res.status(200);
+    return res.send({users});
   } catch (err) {
     return handleError(res, err);
   }
@@ -101,5 +117,6 @@ async function mapUser(user: admin.auth.UserRecord) {
 }
 
 function handleError(res: Response, err: any) {
-  return res.status(500).send({message: `${err.code} - ${err.message}`});
+  res.status(err.code && typeof err.code === 'number' ? err.code : 500);
+  return res.send({message: `${err.code} - ${err.message}`});
 }

@@ -1,7 +1,7 @@
 import 'mocha';
 import * as sinon from 'sinon';
 import * as test from 'firebase-functions-test';
-import * as configs from './config.spec';
+import * as configs from './test-data.spec';
 
 console.log('_______________________');
 
