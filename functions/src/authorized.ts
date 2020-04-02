@@ -2,25 +2,28 @@ import { Request, Response } from 'express';
 
 export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boolean }) {
   return (req: Request, res: Response, next: any) => {
-    const {role, email, uid} = res.locals;
-    const {id} = req.params;
 
-    if (email === 'said.mavlyan@gmail.com') {
-      return next();
+    try {
+
+      const {role, email, uid} = res.locals;
+      const {id} = req.params;
+
+      if (email === 'admin@domain.com') {
+        return next();
+      }
+
+      if (opts.allowSameUser && id && uid === id) {
+        return next();
+      }
+
+      if (role && opts.hasRole.includes(role)) {
+        return next();
+      }
+
+      throw new Error('Fulfill all requirements');
+    } catch (err) {
+      res.status(403);
+      return res.send({message: `Unauthorized: ${err.message}`});
     }
-
-    if (opts.allowSameUser && id && uid === id) {
-      return next();
-    }
-
-    if (!role) {
-      return res.status(403).send();
-    }
-
-    if (opts.hasRole.includes(role)) {
-      return next();
-    }
-
-    return res.status(403).send();
   };
 }

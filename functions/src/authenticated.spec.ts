@@ -3,11 +3,13 @@ import { Request, Response } from 'express';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
 import { isAuthenticated } from './authenticated';
+import { idToken } from './config.spec';
 
-describe('authenticated.ts', () => {
+describe('authenticated.ts', function () {
 
   let req: Partial<Request>;
   let res: Partial<Response>;
+  let next;
 
   beforeEach(() => {
     req = {headers: {}};
@@ -24,7 +26,7 @@ describe('authenticated.ts', () => {
       sinon.assert.calledWith(res.status as sinon.SinonStub, 401);
     });
 
-    it('should return {message: "Unauthorized..."}', async () => {
+    it('should return {message: "Unauthorized:..."}', async () => {
       await isAuthenticated(req as Request, res as Response, null);
 
       const responseMessage = (res.send as sinon.SinonStub).lastCall.args[0];
@@ -33,29 +35,43 @@ describe('authenticated.ts', () => {
 
   });
 
-  describe.skip('when called with invalid token', () => {
+  describe('when called with invalid token', () => {
 
-    it('should return {message: "Unauthorized..."}', async () => {
+    beforeEach(() => {
+      req = {headers: {authorization: `Bearer ${Math.random()}`}};
+    });
 
+    it('should return {message: "Unauthorized:..."}', async () => {
+      await isAuthenticated(req as Request, res as Response, null);
+      const responseMessage = (res.send as sinon.SinonStub).lastCall.args[0];
+      expect(responseMessage).to.have.property('message').match(/^Unauthorized:/);
     });
 
     it('should return status: 401', async () => {
-
+      await isAuthenticated(req as Request, res as Response, null);
+      sinon.assert.calledWith(res.status as sinon.SinonStub, 401);
     });
 
   });
 
-  describe.skip('when called with valid token', () => {
+  describe('when called with valid token', () => {
+
+    beforeEach(() => {
+      req = {
+        headers: {authorization: `Bearer ${idToken}`}
+      };
+      next = sinon.stub();
+    });
 
     it('should call next()', async () => {
-
+      await isAuthenticated(req as Request, res as Response, next);
+      sinon.assert.calledOnce(next as sinon.SinonStub);
     });
 
-    it('should return status: 400', async () => {
-
+    it('should add `locals: {uid, role, email...}` to res', async () => {
+      await isAuthenticated(req as Request, res as Response, next);
+      expect(res).to.ownProperty('locals').includes.keys('uid', 'role', 'email');
     });
-
   });
-
 });
 

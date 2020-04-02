@@ -5,7 +5,7 @@ import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import { routesConfig } from './routes-config';
 
-admin.initializeApp();
+export const adminApp = admin.initializeApp();
 
 const app = express();
 app.use(bodyParser.json());

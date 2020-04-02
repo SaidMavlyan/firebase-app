@@ -16,7 +16,6 @@ export async function create(req: Request, res: Response) {
       email
     });
 
-    // todo: use triggers
     await admin.auth().setCustomUserClaims(uid, {role});
 
     await admin.firestore().doc(`users/${uid}`).set({
@@ -95,7 +94,7 @@ async function mapUser(user: admin.auth.UserRecord) {
     email: user.email || '',
     displayName: user.displayName || '',
     role: customClaims.role,
-    dailyCalories: userInfo.dailyCalories || undefined,
+    dailyCalories: userInfo?.dailyCalories,
     lastSignInTime: user.metadata.lastSignInTime,
     creationTime: user.metadata.creationTime
   };
