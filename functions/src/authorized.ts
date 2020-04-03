@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { RoleLevel, Roles } from './roles';
 
 export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boolean }) {
   return (req: Request, res: Response, next: any) => {
@@ -12,11 +13,14 @@ export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boo
         return next();
       }
 
+      if (req.body?.role) {
+        validateRoleFromTo(role, req.body.role);
+      }
+
       if (opts.allowSameUser && id && uid === id) {
         return next();
       }
 
-      // todo: manager can edit managers and users, not admins
       if (role && opts.hasRole.includes(role)) {
         return next();
       }
@@ -27,4 +31,11 @@ export function isAuthorized(opts: { hasRole: Array<string>, allowSameUser?: boo
       return res.send({message: `Unauthorized: ${err.message}`});
     }
   };
+}
+
+function validateRoleFromTo(fromRole: string, toRole: string) {
+  if (!(fromRole in Roles) || !(toRole in Roles) ||
+    (RoleLevel[fromRole] < RoleLevel[toRole])) {
+    throw new Error('Check all passed roles');
+  }
 }
