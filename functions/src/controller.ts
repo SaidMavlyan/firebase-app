@@ -6,10 +6,8 @@ export async function create(req: Request, res: Response) {
   try {
     const {displayName, password, email, role, dailyCalories} = req.body;
 
-    if (!displayName || !password || !email || !role) {
-      res.status(400);
-      return res.send({message: 'Missing fields'});
-    }
+    validateRequired(displayName, password, email, role);
+    validatePassword(password);
 
     const {uid} = await admin.auth().createUser({
       displayName,
@@ -47,14 +45,17 @@ export async function get(req: Request, res: Response) {
 export async function patch(req: Request, res: Response) {
   try {
     const {id} = req.params;
-    const {displayName, email, role, dailyCalories} = req.body;
+    const {displayName, password, email, role, dailyCalories} = req.body;
 
-    if (!id || !displayName || !email || !role) {
-      res.status(400);
-      return res.send({message: 'Missing fields'});
+    validateRequired(id, displayName, email, role);
+
+    if (password) {
+      validatePassword(password);
+      await admin.auth().updateUser(id, {displayName, email, password});
+    } else {
+      await admin.auth().updateUser(id, {displayName, email});
     }
 
-    await admin.auth().updateUser(id, {displayName, email});
     await admin.auth().setCustomUserClaims(id, {role});
 
     if (dailyCalories) {
@@ -69,7 +70,6 @@ export async function patch(req: Request, res: Response) {
 
     res.status(200);
     return res.send({user: userInfo});
-
   } catch (err) {
     return handleError(res, err);
   }
@@ -116,7 +116,27 @@ async function mapUser(user: admin.auth.UserRecord) {
   };
 }
 
+const DATA_VALIDATION_ERROR = 'DataValidationError';
+
 function handleError(res: Response, err: any) {
-  res.status(err.code && typeof err.code === 'number' ? err.code : 500);
-  return res.send({message: `${err.code} - ${err.message}`});
+  if (err.name === DATA_VALIDATION_ERROR) {
+    res.status(400);
+    return res.send({message: `${err.message}`});
+  } else {
+    res.status(500);
+    return res.send({message: `${err.code} - ${err.message}`});
+  }
 }
+
+function validatePassword(password: string) {
+  if (password.length < 8) {
+    throw {name: DATA_VALIDATION_ERROR, message: 'Password should be more than 8 characters long'};
+  }
+}
+
+function validateRequired(...fields) {
+  if (fields.some(field => !field)) {
+    throw {name: DATA_VALIDATION_ERROR, message: 'Missing fields'};
+  }
+}
+

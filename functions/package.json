@@ -3,7 +3,7 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json src/**/*.ts",
     "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
+    "serve": "npm run build && env GOOGLE_APPLICATION_CREDENTIALS=\"../firebase-service-key.private.json\" firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",

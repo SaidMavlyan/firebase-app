@@ -11,9 +11,9 @@ describe('controller.ts', () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
   const email = 'testEmail@example.com';
-  const password = 'test1234';
   const displayName = 'test display name';
   const role = Roles.user;
+  let password = 'test1234';
 
   const testReq = {
     headers: {},
@@ -73,6 +73,17 @@ describe('controller.ts', () => {
       delete req.body.role;
       await create(req as Request, res as Response);
       sinon.assert.calledWith(res.status as sinon.SinonStub, 400);
+    });
+
+    it('should validate password', async function () {
+      this.timeout(7000);
+      req.body.password = 'short';
+
+      await create(req as Request, res as Response);
+      sinon.assert.calledWith(res.status as sinon.SinonStub, 400);
+
+      const responseMessage = (res.send as sinon.SinonStub).lastCall.args[0];
+      expect(responseMessage).to.have.property('message').match(/^Password/);
     });
 
     it('should create user in firebase auth', async function () {
@@ -165,6 +176,27 @@ describe('controller.ts', () => {
       await patch(req as Request, res as Response);
 
       sinon.assert.calledWith(res.status as sinon.SinonStub, 200);
+    });
+
+    it('should update password', async function () {
+      this.timeout(7000);
+      password = 'longer' + password;
+      req.body.password = password;
+
+      await patch(req as Request, res as Response);
+      const response = await signIn(req.body.email, password);
+      expect(response).ownProperty('idToken');
+    });
+
+    it('should validate password', async function () {
+      this.timeout(7000);
+      req.body.password = 'short';
+
+      await patch(req as Request, res as Response);
+      sinon.assert.calledWith(res.status as sinon.SinonStub, 400);
+
+      const responseMessage = (res.send as sinon.SinonStub).lastCall.args[0];
+      expect(responseMessage).to.have.property('message').match(/^Password/);
     });
 
     it('should update role in custom claims', async function () {
